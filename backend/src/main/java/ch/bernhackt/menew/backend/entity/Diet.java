@@ -15,6 +15,14 @@ public class Diet {
     @Column(nullable = false)
     private String label;
 
+    protected Diet() {}
+
+    public Diet(String slug, String label) {
+        this.slug = slug;
+        this.label = label;
+    }
+
+
     public Long getId() {
         return id;
     }
