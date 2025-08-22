@@ -32,6 +32,14 @@ public class Person {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    public Person() {}
+
+    public Person(String name, Set<Diet> diets, Set<Tag> tags) {
+        this.name = name;
+        this.diets = diets;
+        this.tags = tags;
+    }
+
     public Long getId() {
         return id;
     }
