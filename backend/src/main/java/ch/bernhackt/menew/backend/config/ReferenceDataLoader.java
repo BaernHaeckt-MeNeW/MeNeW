@@ -8,26 +8,29 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class DietDataLoader implements CommandLineRunner {
+public class ReferenceDataLoader implements CommandLineRunner {
 
     private final DietRepository dietRepository;
 
-    public DietDataLoader(DietRepository dietRepository) {
+    public ReferenceDataLoader(DietRepository dietRepository) {
         this.dietRepository = dietRepository;
     }
 
     @Override
     public void run(String... args) {
+       addDiets();
+    }
+
+    private void addDiets() {
         List<Diet> defaults = List.of(
-                new Diet("vegetarisch", "Vegetarisch"),
-                new Diet("vegan", "Vegan"),
-                new Diet("laktosefrei", "Laktosefrei"),
-                new Diet("glutenfrei", "Glutenfrei")
+                new Diet("vegetarisch"),
+                new Diet("vegan"),
+                new Diet("laktosefrei"),
+                new Diet("glutenfrei")
         );
 
         for (Diet d : defaults) {
-            dietRepository.findBySlug(d.getSlug())
-                    .orElseGet(() -> dietRepository.save(d));
+            dietRepository.findByName(d.getName()).orElse(dietRepository.save(d));
         }
     }
 }

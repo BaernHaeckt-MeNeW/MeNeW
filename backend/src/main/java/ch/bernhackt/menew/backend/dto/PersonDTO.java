@@ -5,23 +5,19 @@ import ch.bernhackt.menew.backend.entity.Diet;
 
 import java.util.List;
 
-public record PersonResponse(
+public record PersonDTO(
         Long id,
         String name,
-        Long householdId,
-        String householdName,
         List<String> diets,
-        List<TagResponse> tags
+        List<TagDTO> tags
 ) {
 
-    public static PersonResponse fromEntity(Person person) {
-        return new PersonResponse(
+    public static PersonDTO fromEntity(Person person) {
+        return new PersonDTO(
                 person.getId(),
                 person.getName(),
-                person.getHousehold().getId(),
-                person.getHousehold().getName(),
                 person.getDiets().stream().map(Diet::getLabel).toList(),
-                person.getTags().stream().map(TagResponse::fromEntity).toList()
+                person.getTags().stream().map(TagDTO::fromEntity).toList()
         );
     }
 }

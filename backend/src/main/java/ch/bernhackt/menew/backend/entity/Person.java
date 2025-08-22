@@ -14,10 +14,6 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "household_id", nullable = false)
-    private Household household;
-
     @Column(nullable = false)
     private String name;
 
@@ -42,14 +38,6 @@ public class Person {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Household getHousehold() {
-        return household;
-    }
-
-    public void setHousehold(Household household) {
-        this.household = household;
     }
 
     public String getName() {

@@ -1,7 +1,7 @@
 package ch.bernhackt.menew.backend.service;
 
 
-import ch.bernhackt.menew.backend.dto.PersonResponse;
+import ch.bernhackt.menew.backend.dto.PersonDTO;
 import ch.bernhackt.menew.backend.respository.PersonRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,9 @@ public class PersonService {
         this.repo = repo;
     }
 
-    public List<PersonResponse> listAll() {
+    public List<PersonDTO> listAll() {
         return repo.findAll().stream()
-                .map(PersonResponse::fromEntity)
+                .map(PersonDTO::fromEntity)
                 .toList();
     }
 }

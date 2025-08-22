@@ -9,19 +9,16 @@ public class Diet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String slug;
-
     @Column(nullable = false)
-    private String label;
+    private String name;
 
-    protected Diet() {}
-
-    public Diet(String slug, String label) {
-        this.slug = slug;
-        this.label = label;
+    public Diet(String name) {
+        this.name = name;
     }
 
+    public Diet() {
+
+    }
 
     public Long getId() {
         return id;
@@ -31,19 +28,19 @@ public class Diet {
         this.id = id;
     }
 
-    public String getSlug() {
-        return slug;
+    public String getName() {
+        return name;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLabel() {
-        return label;
+        return name;
     }
 
     public void setLabel(String label) {
-        this.label = label;
+        this.name = label;
     }
 }
