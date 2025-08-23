@@ -4,10 +4,11 @@ import * as React from "react";
 interface NavProps {
     backButton?: boolean;
     topLeftElement?: React.ReactNode;
+    topCenterElement?: React.ReactNode;
     topRightElement?: React.ReactNode;
 }
 
-export default function Nav({backButton, topLeftElement, topRightElement}: NavProps) {
+export default function Nav({backButton, topCenterElement, topLeftElement, topRightElement}: NavProps) {
     const glowClasses =
         "cursor-pointer p-1 rounded-xl transition " +
         "hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] " +
@@ -23,6 +24,10 @@ export default function Nav({backButton, topLeftElement, topRightElement}: NavPr
                 ) : (
                     topLeftElement && <div className={glowClasses}>{topLeftElement}</div>
                 )}
+            </div>
+
+            <div className="flex-1 flex justify-center">
+                {topCenterElement}
             </div>
 
             <div className={glowClasses}>{topRightElement}</div>
