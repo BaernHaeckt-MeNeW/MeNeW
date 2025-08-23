@@ -3,9 +3,6 @@ package ch.bernhackt.menew.backend.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "meals")
@@ -19,7 +16,7 @@ public class Meal {
     private String name;
 
     @Column(nullable = false)
-    private String mealTime;
+    private MealTime mealTime;
 
     @Column(nullable = false)
     private LocalDate plannedMealDate;
@@ -30,11 +27,11 @@ public class Meal {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getMealTime() {
+    public MealTime getMealTime() {
         return mealTime;
     }
 
-    public void setMealTime(String mealTime) {
+    public void setMealTime(MealTime mealTime) {
         this.mealTime = mealTime;
     }
 
