@@ -25,11 +25,6 @@ public class BackendApplication {
     @Bean
     CommandLineRunner initData(PersonRepository repo, MealRepository mealRepository) {
         return args -> {
-            repo.saveAll(List.of(
-                    new Person("Alice", Collections.emptySet(), Collections.emptySet()),
-                    new Person("Bob", Collections.emptySet(), Collections.emptySet()),
-                    new Person("Charlie", Collections.emptySet(), Collections.emptySet())
-            ));
             mealRepository.saveAll(List.of(
                     new Meal("Porridge", MealTime.BREAKFAST, LocalDate.now()),
                     new Meal("Pad Thai", MealTime.DINNER, LocalDate.now())
