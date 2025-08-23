@@ -1,11 +1,10 @@
 import {useState, useCallback, useMemo, useEffect, useRef} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import Nav from "../components/Nav.tsx";
 import {QUESTIONS_TREE} from "../inspiration/data/questions.ts";
 import type {Answer, Question} from "../inspiration/model/dialog.ts";
 import {RefreshCcw} from "lucide-react";
 import {api} from "../lib/api.ts";
-import {useSearchParams} from "react-router-dom";
 import type {MealType} from "../model/MealType.ts";
 
 const INSPIRATION_TITLE = "🍽️ Inspirationen für euch";
@@ -13,12 +12,10 @@ const INSPIRATION_TITLE = "🍽️ Inspirationen für euch";
 type InspirationItem = { title: string };
 
 export default function Dialog() {
-
     const [searchParams] = useSearchParams();
-
     const dateString = searchParams.get("date") || undefined;
     const date = dateString ? new Date(dateString) : undefined;
-    const mealType = searchParams.get("mealType") as MealType || undefined;
+    const mealType = (searchParams.get("mealType") as MealType) || undefined;
 
     const [conversation, setConversation] = useState<Question[]>([QUESTIONS_TREE]);
     const [seen, setSeen] = useState<Set<string>>(new Set([QUESTIONS_TREE.text]));
@@ -28,7 +25,11 @@ export default function Dialog() {
     const [inspoShown, setInspoShown] = useState(false);
     const [isProcessingChoice, setIsProcessingChoice] = useState(false);
 
+    const [isManualEntry, setIsManualEntry] = useState(false);
+    const [manualValue, setManualValue] = useState("");
+
     const scrollRef = useRef<HTMLDivElement>(null);
+    const manualInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
     const resetDialog = useCallback(() => {
@@ -39,6 +40,8 @@ export default function Dialog() {
         setIsLoadingInspo(false);
         setInspoShown(false);
         setIsProcessingChoice(false);
+        setIsManualEntry(false);
+        setManualValue("");
         if (scrollRef.current) scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
     }, []);
 
@@ -46,32 +49,33 @@ export default function Dialog() {
         if (selected[q.text]) return;
         setSelected(prev => ({ ...prev, [q.text]: a.text }));
 
+        if (a.manual) {
+            const prompt: Question = { text: "✍️ Bitte gib den Namen des Gerichts ein", answers: [] };
+            setConversation(prev => [...prev, prompt]);
+            setSeen(prev => new Set(prev).add(prompt.text));
+            setIsManualEntry(true);
+            setIsLeaf(false);
+            setIsProcessingChoice(false);
+            return;
+        }
+
         if (q.text === INSPIRATION_TITLE) {
-            const confirmation: Question = {
-                text: `🎉 Ausgezeichnete Wahl: ${a.text}`,
-                answers: [],
-            };
+            const confirmation: Question = { text: `🎉 Ausgezeichnete Wahl: ${a.text}`, answers: [] };
             setConversation(prev => [...prev, confirmation]);
             setSeen(prev => new Set(prev).add(confirmation.text));
-
             setIsProcessingChoice(true);
-
-            api.createMeal({ name: a.text, mealTime: mealType, plannedMealDate: date ?? new Date() });
-            setTimeout(() => {
-                navigate("/");
-            }, 2000);
-
+            void api.createMeal({ name: a.text, mealTime: mealType, plannedMealDate: date ?? new Date() });
+            setTimeout(() => navigate("/"), 1300);
             return;
         }
 
         const next = a.followUp as Question | undefined;
         if (!next || !next.answers?.length) { setIsLeaf(true); return; }
         setIsLeaf(false);
-
         if (seen.has(next.text)) return;
         setConversation(prev => [...prev, next]);
         setSeen(prev => new Set(prev).add(next.text));
-    }, [seen, selected, navigate]);
+    }, [seen, selected, navigate, mealType, date]);
 
     const summary = useMemo(
         () => conversation.filter(q => selected[q.text]).map(q => ({ question: q.text, answer: selected[q.text] })),
@@ -82,7 +86,7 @@ export default function Dialog() {
         if (scrollRef.current) {
             scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
         }
-    }, [conversation, isLeaf, isLoadingInspo, isProcessingChoice]);
+    }, [conversation, isLeaf, isLoadingInspo, isProcessingChoice, isManualEntry]);
 
     useEffect(() => {
         if (!isLeaf || inspoShown || isLoadingInspo) return;
@@ -108,7 +112,22 @@ export default function Dialog() {
             setInspoShown(true);
             setIsLeaf(false);
         })();
-    }, [isLeaf, inspoShown, isLoadingInspo]);
+    }, [isLeaf, inspoShown, isLoadingInspo, summary, api, date, mealType]);
+
+    useEffect(() => {
+        if (isManualEntry) setTimeout(() => manualInputRef.current?.focus(), 50);
+    }, [isManualEntry]);
+
+    const submitManual = useCallback(() => {
+        const value = manualValue.trim();
+        if (!value) return;
+        const confirmation: Question = { text: `📝 Erfasst: ${value}`, answers: [] };
+        setConversation(prev => [...prev, confirmation]);
+        setSeen(prev => new Set(prev).add(confirmation.text));
+        setIsProcessingChoice(true);
+        void api.createMeal({ name: value, mealTime: mealType, plannedMealDate: date ?? new Date() });
+        setTimeout(() => navigate("/"), 1200);
+    }, [manualValue, mealType, date, navigate]);
 
     return (
         <div className="h-screen overflow-hidden">
@@ -132,7 +151,7 @@ export default function Dialog() {
             <div className="pt-16 h-full">
                 <div
                     ref={scrollRef}
-                    className="h-[calc(100vh-4rem)] overflow-y-auto flex flex-col gap-4 p-4 w-full pb-16"
+                    className="h-[calc(100vh-4rem)] overflow-y-auto flex flex-col gap-4 p-4 w-full pb-24"
                 >
                     {conversation.map((message, i) => (
                         <div key={`msg-${i}`} className="w-full">
@@ -185,6 +204,31 @@ export default function Dialog() {
                 <span className="absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 animate-ping"></span>
               </span>
                         </div>
+                    )}
+
+                    {isManualEntry && (
+                        <form
+                            onSubmit={(e) => { e.preventDefault(); submitManual(); }}
+                            className="mt-10 sticky bottom-4 mx-auto w-full max-w-lg flex items-center gap-2 bg-white/80 backdrop-blur rounded-2xl shadow px-3 py-2"
+                        >
+                            <input
+                                ref={manualInputRef}
+                                value={manualValue}
+                                onChange={(e) => setManualValue(e.target.value)}
+                                placeholder="Gericht manuell eingeben…"
+                                className="flex-1 bg-transparent outline-none text-sm text-gray-900 placeholder:text-gray-400"
+                                disabled={isProcessingChoice}
+                            />
+                            <button
+                                type="submit"
+                                disabled={isProcessingChoice || !manualValue.trim()}
+                                className={`px-3 py-1.5 rounded-xl text-sm font-medium text-white transition
+                  bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500
+                  ${isProcessingChoice || !manualValue.trim() ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"}`}
+                            >
+                                Speichern
+                            </button>
+                        </form>
                     )}
                 </div>
             </div>

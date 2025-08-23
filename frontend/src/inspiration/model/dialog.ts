@@ -6,4 +6,5 @@ export interface Question {
 export interface Answer {
     text: string,
     followUp?: Question
+    manual?: boolean;
 }

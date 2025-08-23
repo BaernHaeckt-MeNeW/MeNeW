@@ -82,7 +82,8 @@ export const QUESTIONS_TREE: Question = {
             text: "Hauptsache schnell & easy"
         },
         {
-            text: "Ich hab was bestimmtes vor"
+            text: "Ich hab was bestimmtes vor",
+            manual: true
         }
     ]
 }
