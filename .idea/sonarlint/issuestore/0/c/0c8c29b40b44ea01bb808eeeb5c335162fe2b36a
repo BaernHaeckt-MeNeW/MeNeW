@@ -1,8 +1,0 @@
-
-ˆ	java:S112,"FDefine and throw a dedicated exception instead of using a generic one.(®ù»¬8»ßŞª3J$e6dafe27-f7df-4f8d-9293-ee4045daaa42
-š
-java:S37761"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(¿˜›úÿÿÿÿ8ÁßŞª3J$ae466519-8aac-4c46-b246-1e3bcbf11816
-Œ
-java:S3358a"DExtract this nested ternary operation into an independent statement.(»¥é«ùÿÿÿÿ8ÃßŞª3J$375cd385-c8b3-4876-8951-33f161f42965
-†
-java:S1068">Remove this unused "namedParameterJdbcTemplate" private field.(’Ğ»ıÿÿÿÿ8ÇßŞª3J$3c6791fd-7f3a-481b-8a3e-a0bd723dd153
