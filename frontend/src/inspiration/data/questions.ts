@@ -2,7 +2,7 @@ import type {Question} from "../model/dialog.ts";
 
 
 export const QUESTIONS_TREE: Question = {
-    text: "Wie bist du drauf?",
+    text: "Wie stehst du heute zum Kochen?",
     answers: [
         {
             text: "Heute was besonderes",
