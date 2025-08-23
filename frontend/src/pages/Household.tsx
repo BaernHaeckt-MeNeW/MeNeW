@@ -21,6 +21,11 @@ export default function Household() {
         <div>
             <img src={"/assets/household_img.png"} alt="Household" className="w-60 h-60 rounded-3xl mx-auto mb-4"/>
         </div>
+        {
+            persons?.length === 0 && <>
+                <p className="text-center text-gray-500 mb-4">Füge Personen zu deinem Haushalt hinzu, um gemeinsame Mahlzeiten zu planen!</p>
+            </>
+        }
         <div className="grid grid-cols-1 gap-4 justify-center">
             {persons?.map((person, index) => (
                 <PersonCard key={index} name={person.name}/>
