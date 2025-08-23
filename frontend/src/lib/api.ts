@@ -3,5 +3,5 @@ import type {Person} from "../model/Person.ts";
 
 export const api = {
     getPersons: () =>
-        request<Person[]>(`/persons`, { method: "GET" }),
+        request<Person[]>(`/api/persons`, { method: "GET" }),
 };

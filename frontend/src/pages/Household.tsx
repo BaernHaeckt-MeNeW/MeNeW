@@ -1,23 +1,19 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {PersonCard} from "../components/PersonCard.tsx";
 import Card from "../components/Card.tsx";
 import {CirclePlus} from "lucide-react";
 import Nav from "../components/Nav.tsx";
 import {Link} from "react-router-dom";
+import {api} from "../lib/api.ts";
+import type {Person} from "../model/Person.ts";
 
 export default function Household() {
 
-    //const [persons, setPersons] = useState<Person[]>([]);
-
-    const persons = [
-        {id: 1, name: "Alice", diets: ["Vegetarian"], tags: []},
-        {id: 2, name: "Bob", diets: ["Vegan"], tags: []},
-        {id: 3, name: "Charlie", diets: ["Gluten-Free"], tags: []},
-    ]
+    const [persons, setPersons] = useState<Person[]>([]);
 
     useEffect(() => {
-        //api.getPersons()
-        //    .then((data) => setPersons(data))
+        api.getPersons()
+            .then((data) => setPersons(data))
     }, [])
 
     return <>
