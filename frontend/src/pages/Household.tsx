@@ -27,7 +27,7 @@ export default function Household() {
                 <PersonCard key={index} name={person.name}/>
             ))}
             <Link to="/new-person" />
-            <Card icon={<CirclePlus  className="w-8 h-8"/>} />
+            <Card icon={<CirclePlus  className="w-8 h-8" />} />
         </div>
     </>
     ;
