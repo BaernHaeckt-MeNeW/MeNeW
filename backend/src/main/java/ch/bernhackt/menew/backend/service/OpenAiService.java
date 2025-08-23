@@ -7,7 +7,7 @@ import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class OpenAiService {
 
     private static final String SYSTEM_PROMPT = """
