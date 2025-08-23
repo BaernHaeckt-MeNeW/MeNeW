@@ -108,8 +108,6 @@ public class InspirationService {
                     .asText();
 
             String[] ideas = mapper.readValue(content, String[].class);
-
-            System.out.println(ideas);
             return new InspirationDTO(ideas);
 
         } catch (JsonProcessingException e) {
