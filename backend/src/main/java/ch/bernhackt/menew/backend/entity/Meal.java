@@ -21,6 +21,15 @@ public class Meal {
     @Column(nullable = false)
     private LocalDate plannedMealDate;
 
+    public Meal() {
+    }
+
+    public Meal(String name, MealTime mealTime, LocalDate plannedMealDate) {
+        this.name = name;
+        this.mealTime = mealTime;
+        this.plannedMealDate = plannedMealDate;
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
