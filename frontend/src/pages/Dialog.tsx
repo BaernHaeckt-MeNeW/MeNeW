@@ -107,7 +107,7 @@ export default function Dialog() {
         }
 
         if (q.text === INSPIRATION_TITLE) {
-            const confirmation: Question = {text: `🎉 Ausgezeichnete Wahl: ${a.text}`, answers: []};
+            const confirmation: Question = {text: `🎉 Ausgezeichnete Wahl: ${a.text}. Mahlzeit wird gespeichert...`, answers: []};
             setConversation(prev => [...prev, confirmation]);
             setSeen(prev => new Set(prev).add(confirmation.text));
             setIsProcessingChoice(true);
