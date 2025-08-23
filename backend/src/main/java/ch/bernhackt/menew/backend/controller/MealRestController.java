@@ -1,15 +1,13 @@
 package ch.bernhackt.menew.backend.controller;
 
 import ch.bernhackt.menew.backend.dto.MealDTO;
-import ch.bernhackt.menew.backend.dto.PersonDTO;
 import ch.bernhackt.menew.backend.service.MealService;
-import ch.bernhackt.menew.backend.service.PersonService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/persons")
+@RequestMapping("/api/meals")
 public class MealRestController {
 
     private final MealService mealService;
