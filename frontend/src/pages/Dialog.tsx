@@ -30,7 +30,7 @@ export default function Dialog() {
     return (
         <div className="h-screen overflow-hidden">
             <div className="fixed top-0 left-0 right-0 z-50 h-16 py-6 px-4 bg-background">
-                <Nav topLeftElement={<h1 className="font-bold text-2xl">MeNeW Assistant</h1>} />
+                <Nav backButton topCenterElement={<h1 className="font-bold text-2xl">MeNeW Assistant</h1>} />
             </div>
 
             <div className="pt-16 h-full">
@@ -52,14 +52,24 @@ export default function Dialog() {
                                                 onClick={() => onClickAnswer(message, a)}
                                                 disabled={locked && !isSelected}
                                                 key={`ans-${j}`}
-                                                className={`text-left p-4 rounded-2xl shadow-md w-full transition
-                          ${isSelected ? "bg-blue-600 text-white ring-2 ring-blue-300" : "bg-blue-100 text-black hover:bg-blue-200"}
-                          ${locked && !isSelected ? "opacity-60 cursor-not-allowed" : ""}`}
+                                                className={`text-left p-4 rounded-2xl shadow-md w-full transition-all duration-300
+        ${
+                                                    isSelected
+                                                        ? "bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 text-white shadow-lg scale-[1.02]"
+                                                        : "bg-blue-100 text-black hover:bg-blue-200"
+                                                }
+        ${locked && !isSelected ? "opacity-60 cursor-not-allowed" : ""}`}
                                             >
                                                 {a.text}
+                                                {isSelected && (
+                                                    <span className="ml-2 inline-block text-sm font-semibold animate-pulse">
+          ✓
+        </span>
+                                                )}
                                             </button>
                                         );
                                     })}
+
                                 </div>
                             </div>
                         </div>

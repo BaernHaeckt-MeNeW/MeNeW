@@ -17,7 +17,7 @@ export default function Household() {
     }, [])
 
     return <>
-        <Nav backButton/>
+        <Nav backButton topCenterElement={<h1 className="font-bold text-2xl">Mein Haushalt</h1>}/>
         <div>
             <img src={"/assets/household_img.png"} alt="Household" className="w-60 h-60 rounded-3xl mx-auto mb-4"/>
         </div>
