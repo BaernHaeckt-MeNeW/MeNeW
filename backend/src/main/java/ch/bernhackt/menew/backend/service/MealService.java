@@ -49,13 +49,10 @@ public class MealService {
     }
 
     public MealDTO create(MealDTO dto) {
-        if (dto.id() != null && mealRepository.findById(dto.id()).isPresent()) {
-            throw new IllegalStateException("Meal with id " + dto.id() + " already exists");
-        }
-
         Meal mealCreated = new Meal();
         mealCreated.setName(dto.name());
-
+        mealCreated.setPlannedMealDate(dto.plannedMealDate());
+        mealCreated.setMealTime(dto.mealTime());
         Meal mealSaved = mealRepository.save(mealCreated);
         return MealDTO.fromEntity(mealSaved);
     }
