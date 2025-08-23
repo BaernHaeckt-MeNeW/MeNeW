@@ -7,7 +7,7 @@ import {RefreshCcw} from "lucide-react";
 import {api} from "../lib/api.ts";
 import type {MealType} from "../model/MealType.ts";
 
-const INSPIRATION_TITLE = "🍽️ Inspirationen für euch";
+const INSPIRATION_TITLE = "🍽️ Inspirationen für Dich";
 
 type InspirationItem = { title: string };
 
