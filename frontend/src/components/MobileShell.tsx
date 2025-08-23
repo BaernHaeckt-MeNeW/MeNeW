@@ -5,7 +5,7 @@ export default function MobileShell(props: PropsWithChildren) {
         <div
             className="min-h-dvh flex flex-row justify-center py-6 px-4"
         >
-            <main className="max-w-[500px] flex-1 overflow-y-auto overscroll-y-contain touch-pan-y">
+            <main className="max-w-[500px] flex-1 overflow-y-auto overscroll-y-contain touch-pan-y px-1">
                 {props.children}
             </main>
         </div>
