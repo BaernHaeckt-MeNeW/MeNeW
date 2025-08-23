@@ -1,4 +1,5 @@
 import {useState, useCallback, useMemo, useEffect, useRef} from "react";
+import {useNavigate} from "react-router-dom";
 import Nav from "../components/Nav.tsx";
 import {QUESTIONS_TREE} from "../inspiration/data/questions.ts";
 import type {Answer, Question} from "../inspiration/model/dialog.ts";
@@ -6,6 +7,8 @@ import {RefreshCcw} from "lucide-react";
 import {api} from "../lib/api.ts";
 import {useSearchParams} from "react-router-dom";
 import type {MealType} from "../model/MealType.ts";
+
+const INSPIRATION_TITLE = "🍽️ Inspirationen für euch";
 
 type InspirationItem = { title: string };
 
@@ -22,9 +25,11 @@ export default function Dialog() {
     const [selected, setSelected] = useState<Record<string, string>>({});
     const [isLeaf, setIsLeaf] = useState(false);
     const [isLoadingInspo, setIsLoadingInspo] = useState(false);
-    const [inspoShown, setInspoShown] = useState(false); // prevent multiple appends
+    const [inspoShown, setInspoShown] = useState(false);
+    const [isProcessingChoice, setIsProcessingChoice] = useState(false);
 
     const scrollRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     const resetDialog = useCallback(() => {
         setConversation([QUESTIONS_TREE]);
@@ -33,37 +38,52 @@ export default function Dialog() {
         setIsLeaf(false);
         setIsLoadingInspo(false);
         setInspoShown(false);
-        if (scrollRef.current) scrollRef.current.scrollTo({top: 0, behavior: "auto"});
+        setIsProcessingChoice(false);
+        if (scrollRef.current) scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
     }, []);
 
     const onClickAnswer = useCallback((q: Question, a: Answer) => {
         if (selected[q.text]) return;
-        const next = a.followUp as Question | undefined;
-        setSelected(prev => ({...prev, [q.text]: a.text}));
+        setSelected(prev => ({ ...prev, [q.text]: a.text }));
 
-        if (!next || !next.answers?.length) {
-            setIsLeaf(true);
+        if (q.text === INSPIRATION_TITLE) {
+            const confirmation: Question = {
+                text: `🎉 Ausgezeichnete Wahl: ${a.text}`,
+                answers: [],
+            };
+            setConversation(prev => [...prev, confirmation]);
+            setSeen(prev => new Set(prev).add(confirmation.text));
+
+            setIsProcessingChoice(true);
+
+            api.createMeal({ name: a.text, mealTime: mealType, plannedMealDate: date ?? new Date() });
+            setTimeout(() => {
+                navigate("/");
+            }, 2000);
+
             return;
         }
+
+        const next = a.followUp as Question | undefined;
+        if (!next || !next.answers?.length) { setIsLeaf(true); return; }
         setIsLeaf(false);
 
         if (seen.has(next.text)) return;
         setConversation(prev => [...prev, next]);
         setSeen(prev => new Set(prev).add(next.text));
-    }, [seen, selected]);
+    }, [seen, selected, navigate]);
 
     const summary = useMemo(
-        () => conversation.filter(q => selected[q.text]).map(q => ({question: q.text, answer: selected[q.text]})),
+        () => conversation.filter(q => selected[q.text]).map(q => ({ question: q.text, answer: selected[q.text] })),
         [conversation, selected]
     );
 
     useEffect(() => {
         if (scrollRef.current) {
-            scrollRef.current.scrollTo({top: scrollRef.current.scrollHeight, behavior: "smooth"});
+            scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
         }
-    }, [conversation, isLeaf, isLoadingInspo]);
+    }, [conversation, isLeaf, isLoadingInspo, isProcessingChoice]);
 
-    // Mock backend→GPT pipeline when leaf reached
     useEffect(() => {
         if (!isLeaf || inspoShown || isLoadingInspo) return;
 
@@ -76,28 +96,19 @@ export default function Dialog() {
             return inspiration.ideas.map((inspiration: string) => ({title: inspiration}));
         };
 
-        const go = async () => {
-            const pairs = summary; // the Q/A pairs you collected
-            const items = await fetchInspirationMock(pairs);
-
-            console.log("Fetched inspiration items:", items);
-
+        (async () => {
+            const items = await fetchInspirationMock(summary);
             const inspirationQuestion: Question = {
-                text: "🍽️ Inspirationen für Dich",
-                answers: items.map<Answer>(it => ({
-                    text: it.title,
-                    followUp: undefined // keep as leaf; you can wire another step later
-                })),
+                text: INSPIRATION_TITLE,
+                answers: items.map<Answer>(it => ({ text: it.title, followUp: undefined })),
             };
-
             setConversation(prev => [...prev, inspirationQuestion]);
             setSeen(prev => new Set(prev).add(inspirationQuestion.text));
             setIsLoadingInspo(false);
             setInspoShown(true);
-        };
-
-        go();
-    }, [isLeaf, inspoShown, isLoadingInspo, summary]);
+            setIsLeaf(false);
+        })();
+    }, [isLeaf, inspoShown, isLoadingInspo]);
 
     return (
         <div className="h-screen overflow-hidden">
@@ -112,7 +123,7 @@ export default function Dialog() {
                             aria-label="Start over"
                             title="Start over"
                         >
-                            <RefreshCcw className="w-5 h-5"/>
+                            <RefreshCcw className="w-5 h-5" />
                         </button>
                     }
                 />
@@ -129,42 +140,49 @@ export default function Dialog() {
                                 {message.text}
                             </div>
 
-                            <div className="flex justify-end">
-                                <div
-                                    className="bg-gray-800 w-4/5 text-white p-4 rounded-2xl shadow-md my-4 flex flex-col gap-3">
-                                    {message.answers.map((a, j) => {
-                                        const isSelectedAns = selected[message.text] === a.text;
-                                        const locked = !!selected[message.text];
-                                        return (
-                                            <button
-                                                type="button"
-                                                onClick={() => onClickAnswer(message, a)}
-                                                disabled={locked && !isSelectedAns}
-                                                key={`ans-${j}`}
-                                                className={`text-left p-4 rounded-2xl shadow-md w-full transition-all duration-300
-                          ${isSelectedAns
-                                                    ? "bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 text-white shadow-lg scale-[1.02]"
-                                                    : "bg-blue-100 text-black hover:bg-blue-200"}
-                          ${locked && !isSelectedAns ? "opacity-60 cursor-not-allowed" : ""}`}
-                                            >
-                                                {a.text}
-                                                {isSelectedAns && <span
-                                                    className="ml-2 inline-block text-sm font-semibold animate-pulse">✓</span>}
-                                            </button>
-                                        );
-                                    })}
+                            {message.answers.length > 0 && (
+                                <div className="flex justify-end">
+                                    <div className="bg-gray-800 w-4/5 text-white p-4 rounded-2xl shadow-md my-4 flex flex-col gap-3">
+                                        {message.answers.map((a, j) => {
+                                            const isSelectedAns = selected[message.text] === a.text;
+                                            const locked = !!selected[message.text];
+                                            return (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => onClickAnswer(message, a)}
+                                                    disabled={locked && !isSelectedAns}
+                                                    key={`ans-${j}`}
+                                                    className={`text-left p-4 rounded-2xl shadow-md w-full transition-all duration-300
+                            ${isSelectedAns
+                                                        ? "bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 text-white shadow-lg scale-[1.02]"
+                                                        : "bg-blue-100 text-black hover:bg-blue-200"}
+                            ${locked && !isSelectedAns ? "opacity-60 cursor-not-allowed" : ""}`}
+                                                >
+                                                    {a.text}
+                                                    {isSelectedAns && <span className="ml-2 inline-block text-sm font-semibold animate-pulse">✓</span>}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     ))}
 
                     {(isLeaf && !inspoShown) && (
                         <div className="w-full flex justify-center mt-2">
               <span className="relative inline-flex">
-                <span
-                    className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg"></span>
-                <span
-                    className="absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 animate-ping"></span>
+                <span className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg"></span>
+                <span className="absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 animate-ping"></span>
+              </span>
+                        </div>
+                    )}
+
+                    {isProcessingChoice && (
+                        <div className="w-full flex justify-center mt-2">
+              <span className="relative inline-flex">
+                <span className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg"></span>
+                <span className="absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 animate-ping"></span>
               </span>
                         </div>
                     )}

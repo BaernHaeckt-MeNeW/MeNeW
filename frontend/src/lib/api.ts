@@ -4,6 +4,7 @@ import type {Diet} from "../model/Diet.ts";
 import type {Meal} from "../model/Meal.ts";
 import type {CreatePerson} from "../model/CreatePerson.ts";
 import type {MealType} from "../model/MealType.ts";
+import type {CreateMeal} from "../model/CreateMeal.ts";
 
 export const api = {
     getPersons: () =>
@@ -23,5 +24,11 @@ export const api = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({questionsAndAnswers: questionsAndAnswers, date: date.toISOString().split('T')[0], mealType}),
+        }),
+    createMeal: (meal: CreateMeal) =>
+        request<void>(`/api/meals`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(meal),
         }),
 };
