@@ -26,7 +26,7 @@ export default function Nav({backButton, topCenterElement, topLeftElement, topRi
                 )}
             </div>
 
-            <div className="flex-1 flex justify-center">
+            <div className="flex-1 flex justify-start ml-3">
                 {topCenterElement}
             </div>
 
