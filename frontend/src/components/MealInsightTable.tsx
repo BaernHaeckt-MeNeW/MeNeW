@@ -50,11 +50,14 @@ export function MealInsightTable({meals}: MealInsightGridProps) {
                 const numberOfPlannedMeals = Math.min(plannedMealsByDate(date));
                 const isToday = date.toDateString() === today.toDateString();
                 if (isToday) {
-                    return <div key={index} className={"w-6 h-6 rounded-sm bg-gradient-to-r from-pink-500 to-blue-500 opacity-60"}>
-                        <div className={"w-full h-full bg-gradient-to-r  opacity-75"}>
-
+                    return (
+                        <div
+                            key={index}
+                            className="w-6 h-6 rounded-sm bg-orange-500 border-2 border-blue-50"
+                        >
+                            <div className="w-full h-full opacity-75"></div>
                         </div>
-                    </div>
+                    );
                 } else if (numberOfPlannedMeals === 0) {
                     return <div key={index} className={"w-6 h-6 rounded-sm bg-white"}>
                     </div>
