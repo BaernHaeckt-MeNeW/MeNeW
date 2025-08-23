@@ -9,8 +9,6 @@ public record MealDTO(
         Long id,
         String name,
         MealTime mealTime,
-        LocalDate date
-) {
 
     public static MealDTO fromEntity(Meal meal) {
         return new MealDTO(
@@ -20,11 +18,3 @@ public record MealDTO(
                 meal.getPlannedMealDate()
         );
     }
-}
-
-
-
-
-
-
-
