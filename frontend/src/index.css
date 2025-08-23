@@ -11,6 +11,11 @@
 
 body {
   font-family: 'Roboto Light', sans-serif;
-  background-color: #111827;
+  background: linear-gradient(
+          90deg,
+          #111827 0%,
+          #1a2235 50%,
+          #26314c 100%
+  );
   color: #f3f4f6;
 }
