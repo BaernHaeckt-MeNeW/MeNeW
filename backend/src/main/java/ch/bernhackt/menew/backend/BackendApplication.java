@@ -16,18 +16,4 @@ public class BackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(BackendApplication.class, args);
     }
-
-
-    @Bean
-    CommandLineRunner initData(PersonRepository repo) {
-        return args -> {
-            repo.saveAll(List.of(
-                    new Person("Alice", Collections.emptySet(), Collections.emptySet()),
-                    new Person("Bob", Collections.emptySet(), Collections.emptySet()),
-                    new Person("Charlie", Collections.emptySet(), Collections.emptySet())
-            ));
-        };
-    }
-
-
 }
