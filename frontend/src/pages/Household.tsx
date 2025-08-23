@@ -3,6 +3,7 @@ import {PersonCard} from "../components/PersonCard.tsx";
 import Card from "../components/Card.tsx";
 import { CirclePlus  } from "lucide-react";
 import Nav from "../components/Nav.tsx";
+import {Link} from "react-router-dom";
 
 export default function Household() {
 
@@ -25,7 +26,8 @@ export default function Household() {
             {persons.map((person, index) => (
                 <PersonCard key={index} name={person.name}/>
             ))}
-            <Card icon={<CirclePlus  className="w-8 h-8"/>} />
+            <Link to="/new-person" />
+            <Card icon={<CirclePlus  className="w-8 h-8" />} />
         </div>
     </>
     ;

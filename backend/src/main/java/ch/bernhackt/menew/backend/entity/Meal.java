@@ -1,6 +1,8 @@
 package ch.bernhackt.menew.backend.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,8 +18,11 @@ public class Meal {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private String mealTime;
+
+    @Column(nullable = false)
+    private LocalDate plannedMealDate;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -25,7 +30,20 @@ public class Meal {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public String getMealTime() {
+        return mealTime;
+    }
+
+    public void setMealTime(String mealTime) {
+        this.mealTime = mealTime;
+    }
+
+    public LocalDate getPlannedMealDate() {
+        return plannedMealDate;
+    }
+
+    public void setPlannedMealDate(LocalDate plannedMealDate) {
+        this.plannedMealDate = plannedMealDate;
+    }
 }
 
