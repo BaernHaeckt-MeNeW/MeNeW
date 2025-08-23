@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 
 @SpringBootApplication
@@ -37,6 +36,7 @@ public class BackendApplication {
 
             LocalDate start = LocalDate.now().minusWeeks(1);
             LocalDate end = LocalDate.now().plusWeeks(2);
+            LocalDate today = LocalDate.now(); // <— neu
 
             List<Meal> meals = new ArrayList<>();
 
@@ -45,8 +45,8 @@ public class BackendApplication {
             List<String> dinnerOptions = List.of("Pad Thai", "Pizza", "Lasagne", "Burrito");
 
             final double P_BREAKFAST = 0.85;
-            final double P_LUNCH     = 0.75;
-            final double P_DINNER    = 0.65;
+            final double P_LUNCH = 0.75;
+            final double P_DINNER = 0.65;
 
             for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
 
@@ -59,22 +59,28 @@ public class BackendApplication {
                             date
                     ));
                 }
-                if (count > 1) {
+
+                if (!date.equals(today) && count > 1) {
                     if (random.nextDouble() < P_LUNCH) {
-                        meals.add(new Meal(
-                                lunchOptions.get(random.nextInt(lunchOptions.size())),
-                                MealTime.LUNCH,
-                                date
-                        ));
+                        if (!date.equals(today.minusDays(1))) {
+                            meals.add(new Meal(
+                                    lunchOptions.get(random.nextInt(lunchOptions.size())),
+                                    MealTime.LUNCH,
+                                    date
+                            ));
+                        }
                     }
                 }
-                if (count > 2) {
+
+                if (!date.equals(today) && count > 2) {
                     if (random.nextDouble() < P_DINNER) {
-                        meals.add(new Meal(
-                                dinnerOptions.get(random.nextInt(dinnerOptions.size())),
-                                MealTime.DINNER,
-                                date
-                        ));
+                        if (!date.equals(today.minusDays(1))) {
+                            meals.add(new Meal(
+                                    dinnerOptions.get(random.nextInt(dinnerOptions.size())),
+                                    MealTime.DINNER,
+                                    date
+                            ));
+                        }
                     }
                 }
             }
@@ -82,7 +88,5 @@ public class BackendApplication {
             mealRepository.saveAll(meals);
         };
     }
-
-
 
 }
