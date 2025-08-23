@@ -56,7 +56,7 @@ export default function Home() {
                     <Users/>
                 </Link>
             }/>
-        <DatePickerPopUp isOpen={isDatePickerOpen} onClose={() => setIsDatePickerOpen(false)}/>
+        <DatePickerPopUp selectedDate={selectedDate} isOpen={isDatePickerOpen} onClose={() => setIsDatePickerOpen(false)}/>
         <div className={"mt-2 mb-10"} onClick={() => setIsDatePickerOpen(true)}>
             <MealInsightTable meals={meals}/>
         </div>
