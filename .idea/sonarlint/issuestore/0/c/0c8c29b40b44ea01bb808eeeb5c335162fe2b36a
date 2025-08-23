@@ -1,5 +1,8 @@
 
-ˆ	java:S112'"FDefine and throw a dedicated exception instead of using a generic one.(®ù»¬8™º¥ 3J$a17ecbf3-f7ac-464a-a1ca-1877dd490401
-	java:S112."FDefine and throw a dedicated exception instead of using a generic one.(½ˆ¦‘ûÿÿÿÿ8šº¥ 3J$28ce358f-9267-4cc4-abc1-2da94ded9cd5
-z
-java:S1068"2Remove this unused "dietRepository" private field.(°½Óşûÿÿÿÿ8³¿ 3J$109af1a0-fe4b-4f8d-aa43-662be6904df6
+ˆ	java:S112,"FDefine and throw a dedicated exception instead of using a generic one.(®ù»¬8»ßŞª3J$e6dafe27-f7df-4f8d-9293-ee4045daaa42
+š
+java:S37761"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(¿˜›úÿÿÿÿ8ÁßŞª3J$ae466519-8aac-4c46-b246-1e3bcbf11816
+Œ
+java:S3358a"DExtract this nested ternary operation into an independent statement.(»¥é«ùÿÿÿÿ8ÃßŞª3J$375cd385-c8b3-4876-8951-33f161f42965
+†
+java:S1068">Remove this unused "namedParameterJdbcTemplate" private field.(’Ğ»ıÿÿÿÿ8ÇßŞª3J$3c6791fd-7f3a-481b-8a3e-a0bd723dd153

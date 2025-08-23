@@ -2,7 +2,6 @@ package ch.bernhackt.menew.backend.controller;
 
 import ch.bernhackt.menew.backend.dto.PersonDTO;
 import ch.bernhackt.menew.backend.service.PersonService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +26,10 @@ public class PersonRestController {
         service.delete(id);
     }
 
-    // TODO: Machi morn
-   /* @PostMapping
-    public ResponseEntity<PersonDTO> createPerson(@RequestBody PersonDTO person) {
-        service.create(person);
-    } */
-
+   @PostMapping
+    public PersonDTO createPerson(@RequestBody PersonDTO person) {
+        return service.create(person);
+    }
 }
 
 
