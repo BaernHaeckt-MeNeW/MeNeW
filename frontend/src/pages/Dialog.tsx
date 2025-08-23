@@ -4,11 +4,15 @@ import {QUESTIONS_TREE} from "../inspiration/data/questions.ts";
 import type {Answer, Question} from "../inspiration/model/dialog.ts";
 import {RefreshCcw} from "lucide-react";
 
+type InspirationItem = { title: string };
+
 export default function Dialog() {
     const [conversation, setConversation] = useState<Question[]>([QUESTIONS_TREE]);
     const [seen, setSeen] = useState<Set<string>>(new Set([QUESTIONS_TREE.text]));
     const [selected, setSelected] = useState<Record<string, string>>({});
     const [isLeaf, setIsLeaf] = useState(false);
+    const [isLoadingInspo, setIsLoadingInspo] = useState(false);
+    const [inspoShown, setInspoShown] = useState(false); // prevent multiple appends
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -17,6 +21,8 @@ export default function Dialog() {
         setSeen(new Set([QUESTIONS_TREE.text]));
         setSelected({});
         setIsLeaf(false);
+        setIsLoadingInspo(false);
+        setInspoShown(false);
         if (scrollRef.current) scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
     }, []);
 
@@ -24,8 +30,13 @@ export default function Dialog() {
         if (selected[q.text]) return;
         const next = a.followUp as Question | undefined;
         setSelected(prev => ({ ...prev, [q.text]: a.text }));
-        if (!next || !next.answers?.length) { setIsLeaf(true); return; }
+
+        if (!next || !next.answers?.length) {
+            setIsLeaf(true);
+            return;
+        }
         setIsLeaf(false);
+
         if (seen.has(next.text)) return;
         setConversation(prev => [...prev, next]);
         setSeen(prev => new Set(prev).add(next.text));
@@ -40,7 +51,55 @@ export default function Dialog() {
         if (scrollRef.current) {
             scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
         }
-    }, [conversation, isLeaf]);
+    }, [conversation, isLeaf, isLoadingInspo]);
+
+    // Mock backend→GPT pipeline when leaf reached
+    useEffect(() => {
+        if (!isLeaf || inspoShown || isLoadingInspo) return;
+
+        const fetchInspirationMock = async (pairs: {question: string; answer: string}[]): Promise<InspirationItem[]> => {
+            setIsLoadingInspo(true);
+
+            // --- REAL CALL GOES HERE ---
+            // const res = await fetch("/api/inspiration", {
+            //   method: "POST",
+            //   headers: { "Content-Type": "application/json" },
+            //   body: JSON.stringify({ selections: pairs })
+            // });
+            // const data: { items: InspirationItem[] } = await res.json();
+            // return data.items;
+
+            // Mocked response (simulate latency)
+            await new Promise(r => setTimeout(r, 900));
+            return [
+                { title: "Shakshuka mit Feta & Kräutern" },
+                { title: "Veganes Linsen-Dal mit Spinat" },
+                { title: "Glutenfreie Buddha-Bowl mit Tofu" },
+                { title: "Mediterrane Pasta mit Gemüse" },
+                { title: "Overnight Oats mit Beeren & Nüssen" },
+            ];
+        };
+
+        const go = async () => {
+            const pairs = summary; // the Q/A pairs you collected
+            const items = await fetchInspirationMock(pairs);
+
+            const inspirationQuestion: Question = {
+                text: "🍽️ Inspirationen für Dich",
+                answers: items.map<Answer>(it => ({
+                    text: it.title,
+                    followUp: undefined // keep as leaf; you can wire another step later
+                })),
+            };
+
+            setConversation(prev => [...prev, inspirationQuestion]);
+            setSeen(prev => new Set(prev).add(inspirationQuestion.text));
+            setIsLoadingInspo(false);
+            setInspoShown(true);
+        };
+
+        go();
+    }, [isLeaf, inspoShown, isLoadingInspo, summary]);
 
     return (
         <div className="h-screen overflow-hidden">
@@ -99,7 +158,7 @@ export default function Dialog() {
                         </div>
                     ))}
 
-                    {isLeaf && (
+                    {(isLeaf && !inspoShown) && (
                         <div className="w-full flex justify-center mt-2">
               <span className="relative inline-flex">
                 <span className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg"></span>
