@@ -34,8 +34,6 @@ public class BackendApplication {
             Tag tag2 = new Tag(TagCategory.NOGO, "Zu viel Fleisch", LocalDateTime.now());
             dietRepository.saveAll(List.of(veg, halal));
             tagRepository.saveAll(List.of(tag1, tag2));
-            repo.save(new Person("Hans", Set.of(veg), Set.of(tag1)));
-            repo.save(new Person("Severin", Set.of(halal), Set.of(tag2)));
 
             Random random = new Random();
 
