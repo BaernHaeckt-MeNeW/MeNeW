@@ -1,6 +1,8 @@
 package ch.bernhackt.menew.backend.controller;
 
+import ch.bernhackt.menew.backend.dto.MealDTO;
 import ch.bernhackt.menew.backend.dto.PersonDTO;
+import ch.bernhackt.menew.backend.service.MealService;
 import ch.bernhackt.menew.backend.service.PersonService;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,25 +12,24 @@ import java.util.List;
 @RequestMapping("/api/persons")
 public class PersonRestController {
 
-    private final PersonService service;
-
-    public PersonRestController(PersonService service) {
-        this.service = service;
+    private final PersonService personService;
+    public PersonRestController(PersonService personService) {
+        this.personService = personService;
     }
 
     @GetMapping
     public List<PersonDTO> listPersons() {
-        return service.listAll();
+        return personService.listAll();
     }
 
     @DeleteMapping
     public void deletePerson(@RequestParam("id") Long id) throws RuntimeException {
-        service.delete(id);
+        personService.delete(id);
     }
 
-   @PostMapping
+    @PostMapping
     public PersonDTO createPerson(@RequestBody PersonDTO person) {
-        return service.create(person);
+        return personService.create(person);
     }
 }
 
