@@ -64,6 +64,10 @@ public class InspirationService {
 
 
         var prompt = """
+                **Wichtig**:
+                Folgende Mahlzeiten dürfen nicht nochmals vorgeschlagen werden:
+                %s
+                
                 Informationen über die Personen:
                 Mahlzeit: %s
                 
@@ -77,19 +81,14 @@ public class InspirationService {
                 %s
                 
                 Weitere Informationen in Form von Fragen und Antworten:
-                
-                %s
-                
-                
-                Folgende Mahlzeiten oder ähnliche dürfen nicht vorgeschlagen werden, da sie in den letzten Inspirationen bereits vorgeschlagen wurden:
                 %s
                 
                 """.formatted(
+                lastInspiration == null || lastInspiration.isEmpty() ? "Keine" : lastInspiration.stream().toList().toString(),
                 mealTime,
                 personsDiets.stream().map(Diet::getName).toList().toString(),
                 noGoTags.stream().toList().toString(),
                 goTags.stream().toList().toString(),
-                lastInspiration == null || lastInspiration.isEmpty() ? "Keine" : lastInspiration.stream().map(tag -> "- " + tag).toList().toString(),
                 parsedString
         );
 
