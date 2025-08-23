@@ -60,7 +60,7 @@ export function NewPerson() {
                     <h2 className="text-2xl font-bold mb-4">Ernährungsformen</h2>
                     <div className="space-y-4 grid grid-cols-2">
                         {diets.map(diet => (
-                            <div key={diet.id} className="flex items-center">
+                            <div key={diet.id} className="flex items-center mb-4">
                                 <input
                                     id={`diet-${diet.id}`}
                                     name="diet"
