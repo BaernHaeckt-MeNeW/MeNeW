@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,7 +30,7 @@ public class InspirationService {
         this.personRepository = personRepository;
     }
 
-    public InspirationDTO getInspiration(QuestionAndAnswerDTO[] questionAndAnswerDTOS, MealTime mealTime, LocalDate date) {
+    public InspirationDTO getInspiration(QuestionAndAnswerDTO[] questionAndAnswerDTOS, MealTime mealTime, List<String> lastInspiration) {
         var persons = personRepository.findAll();
         var personsDiets = persons.stream()
                 .flatMap(person -> person.getDiets().stream())
@@ -78,11 +79,16 @@ public class InspirationService {
                 
                 %s
                 
+                
+                Folgende Mahlzeiten oder ähnliche dürfen nicht vorgeschlagen werden, da sie in den letzten Inspirationen bereits vorgeschlagen wurden:
+                %s
+                
                 """.formatted(
                 mealTime,
                 personsDiets.stream().map(diet -> "- " + diet.getName()).toList().toString(),
                 noGoTags.stream().map(tag -> "- " + tag).toList().toString(),
                 goTags.stream().map(tag -> "- " + tag).toList().toString(),
+                lastInspiration == null || lastInspiration.isEmpty() ? "Keine" : lastInspiration.stream().map(tag -> "- " + tag).toList().toString(),
                 parsedString
         );
 

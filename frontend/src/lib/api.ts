@@ -19,11 +19,11 @@ export const api = {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(person),
         }),
-    getInspiration: (questionsAndAnswers: { question: string; answer: string }[], date: Date, mealType: MealType) =>
+    getInspiration: (questionsAndAnswers: { question: string; answer: string }[], date: Date, mealType: MealType, lastInspirations: string[]) =>
         request<{ideas: string[]}>(`/api/inspiration`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({questionsAndAnswers: questionsAndAnswers, date: date.toISOString().split('T')[0], mealType}),
+            body: JSON.stringify({questionsAndAnswers: questionsAndAnswers, date: date.toISOString().split('T')[0], mealType, lastInspirations}),
         }),
     createMeal: (meal: CreateMeal) =>
         request<void>(`/api/meals`, {
