@@ -1,36 +1,83 @@
-import type {Question} from "../model/decision-tree.ts";
+import type {Question} from "../model/dialog.ts";
 
-export const QUESTIONS: Record<string, Question> = {
-    q1: {
-        id: "q1",
-        text: "Was ist der Plan?",
-        answers: [
-            {kind: "next", text: "Heute darf's was besonderes sein", nextId: "q2"},
-            {kind: "next", text: "Ich habe null Plan", nextId: "q2"},
-            {kind: "leaf", text: "Hauptsache schnell & easy", result: "VORSCHLÄGE"},
-            {kind: "leaf", text: "Ich hab was bestimmtes vor", result: "INPUT"},
-            {kind: "leaf", text: "Ich möchte Zutaten aufbrauchen", result: "INPUT"}
-        ],
-    },
-    q2: {
-        id: "q2",
-        text: "Was spricht dich gerade an?",
-        answers: [
-            {kind: "next", text: "Knusprig", nextId: "q3"},
-            {kind: "next", text: "Saftig", nextId: "q3"},
-            {kind: "leaf", text: "Gehobenes Feeling", result: "VORSCHLÄGE"},
-            {kind: "next", text: "Kreativ", nextId: "q3"}
-        ],
-    },
-    q3: {
-        id: "q3",
-        text: "Lust auf eine bestimmte Region?",
-        answers: [
-            {kind: "leaf", text: "Asiatisch", result: "VORSCHLÄGE"},
-            {kind: "leaf", text: "Italienisch", result: "VORSCHLÄGE"},
-            {kind: "leaf", text: "Amerikanisch", result: "VORSCHLÄGE"},
-            {kind: "leaf", text: "Orientalisch", result: "VORSCHLÄGE"},
-            {kind: "leaf", text: "Egal", result: "VORSCHLÄGE"}
-        ],
-    },
-};
+
+export const QUESTIONS_TREE: Question = {
+    text: "Was möchten Sie tun?",
+    answers: [
+        {
+            text: "Essen planen",
+            followUp: {
+                text: "Für wen möchten Sie das Essen planen?",
+                answers: [
+                    {
+                        text: "Für mich",
+                        followUp: {
+                            text: "Welche Art von Mahlzeit möchten Sie planen?",
+                            answers: [
+                                {text: "Frühstück"},
+                                {text: "Mittagessen"},
+                                {text: "Abendessen"},
+                                {text: "Snack"},
+                            ]
+                        }
+                    },
+                    {
+                        text: "Für jemand anderen",
+                        followUp: {
+                            text: "Welche Art von Mahlzeit möchten Sie planen?",
+                            answers: [
+                                {text: "Frühstück"},
+                                {text: "Mittagessen"},
+                                {text: "Abendessen"},
+                                {text: "Snack"},
+                            ]
+                        }
+                    },
+                    {
+                        text: "Für eine Gruppe",
+                        followUp: {
+                            text: "Wie viele Personen sind in der Gruppe?",
+                            answers: [
+                                {text: "2-4 Personen"},
+                                {text: "5-10 Personen"},
+                                {text: "Mehr als 10 Personen"},
+                            ]
+                        }
+                    },
+                ]
+            }
+        },
+        {
+            text: "Einkaufsliste erstellen",
+            followUp: {
+                text: "Möchten Sie eine neue Einkaufsliste erstellen oder eine vorhandene bearbeiten?",
+                answers: [
+                    {text: "Neue Einkaufsliste erstellen"},
+                    {text: "Vorhandene Einkaufsliste bearbeiten"},
+                ]
+            }
+        },
+        {
+            text: "Rezepte suchen",
+            followUp: {
+                text: "Nach welchen Kriterien möchten Sie Rezepte suchen?",
+                answers: [
+                    {text: "Nach Zutaten"},
+                    {text: "Nach Mahlzeittyp (z.B. Frühstück, Mittagessen)"},
+                    {text: "Nach Diätpräferenzen (z.B. vegetarisch, vegan)"},
+                ]
+            }
+        },
+        {
+            text: "Einstellungen anpassen",
+            followUp: {
+                text: "Nach welchen Kriterien möchten Sie Rezepte suchen?",
+                answers: [
+                    {text: "Nach Zutaten"},
+                    {text: "Nach Mahlzeittyp (z.B. Frühstück, Mittagessen)"},
+                    {text: "Nach Diätpräferenzen (z.B. vegetarisch, vegan)"},
+                ]
+            }
+        },
+    ]
+}

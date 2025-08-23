@@ -7,6 +7,7 @@ import NotFound from './pages/NotFound.tsx';
 import Home from "./pages/Home.tsx";
 import Household from "./pages/Household.tsx";
 import {NewPerson} from "./pages/NewPerson.tsx";
+import Dialog from "./pages/Dialog.tsx";
 
 const router = createBrowserRouter([
     {
@@ -16,7 +17,8 @@ const router = createBrowserRouter([
         children: [
             { index: true, element: <Home /> },
             { path: "household", element: <Household /> },
-            { path: "new-person", element: <NewPerson/> }
+            { path: "new-person", element: <NewPerson/> },
+            { path: "dialog", element: <Dialog/> }
         ],
     },
 ]);

@@ -83,7 +83,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-4 justify-center">
             {hasBreakfast ? <>
                     {todaysMeals.filter(m => m.mealTime === 'BREAKFAST')?.map((meal, index) => (
-                        <MealCard key={index} name={meal.name} mealTime={"Morgenessen"}/>
+                        <MealCard key={index} name={meal.name} mealTime={"Frühstück"}/>
                     ))}
                 </> :
                 <>
