@@ -16,6 +16,6 @@ public class InspirationController {
 
     @PostMapping
     public InspirationDTO getInspiration(@RequestBody GetInspirationDTO dto) {
-        return inspirationService.getInspiration(dto.questionsAndAnswers(), dto.mealType(), dto.date());
+        return inspirationService.getInspiration(dto.questionsAndAnswers(), dto.mealType(), dto.lastInspirations());
     }
 }

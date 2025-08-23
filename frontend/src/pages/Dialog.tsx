@@ -87,17 +87,17 @@ export default function Dialog() {
     useEffect(() => {
         if (!isLeaf || inspoShown || isLoadingInspo) return;
 
-        const fetchInspirationMock = async (pairs: {
+        const fetchInspiration = async (pairs: {
             question: string;
             answer: string
         }[]): Promise<InspirationItem[]> => {
             setIsLoadingInspo(true);
-            const inspiration = await api.getInspiration(pairs, date || new Date(), mealType || "DINNER");
+            const inspiration = await api.getInspiration(pairs, date || new Date(), mealType || "DINNER", [""]);
             return inspiration.ideas.map((inspiration: string) => ({title: inspiration}));
         };
 
         (async () => {
-            const items = await fetchInspirationMock(summary);
+            const items = await fetchInspiration(summary);
             const inspirationQuestion: Question = {
                 text: INSPIRATION_TITLE,
                 answers: items.map<Answer>(it => ({ text: it.title, followUp: undefined })),
