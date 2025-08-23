@@ -1,6 +1,9 @@
+import type {MealType} from "./MealType.ts";
+
+
 export interface Meal {
     id: number;
     name: string;
-    mealTime: string;
-    // TODO extend
+    mealTime: MealType;
+    plannedMealDate: string;
 }

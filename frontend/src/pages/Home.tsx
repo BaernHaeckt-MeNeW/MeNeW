@@ -4,24 +4,47 @@ import Nav from "../components/Nav.tsx";
 import type {Meal} from "../model/Meal.ts";
 import {MealCard} from "../components/MealCard.tsx";
 import NoMealCard from "../components/NoMealCard.tsx";
+import {Link, useNavigate} from "react-router-dom";
+import {Users} from "lucide-react";
+import {MealInsightTable} from "../components/MealInsightTable.tsx";
 
 export default function Home() {
-    const [meals, setMeals] = useState<Meal[]>([]);
+    const [meals, setMeals] = useState<Meal[] | null>(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        api.getPersons().then(persons => {
+            if (persons.length === 0) {
+                navigate("/household");
+            }
+        })
+    }, [navigate]);
 
     useEffect(() => {
         api.getMeals()
             .then((data) => setMeals(data))
     }, [])
 
+    if (meals === null) {
+        return <div></div>;
+    }
+
     const hasBreakfast = meals.some(m => m.mealTime === 'BREAKFAST');
     const hasLunch = meals.some(m => m.mealTime === 'LUNCH');
     const hasDinner = meals.some(m => m.mealTime === 'DINNER');
 
     return <>
-        <Nav backButton/>
-        <h1 className={"font-bold text-2xl mb-5"}>Hallo, Marco!</h1>
+        <Nav
+            topLeftElement={
+                <h1 className={"font-bold text-2xl"}>Hallo, Marco!</h1>
+            }
+            topRightElement={
+            <Link to={"/household"}>
+                <Users/>
+            </Link>
+        }/>
         <div>
-            <img src={"/assets/home.png"} alt="Household" className="w-60 h-60 rounded-3xl mx-auto mb-4"/>
+            <MealInsightTable meals={meals}/>
         </div>
         <h1 className={"font-bold text-3xl mb-10 text-center"}>Samstag, 23. Aug.</h1>
         <div className="grid grid-cols-1 gap-4 justify-center">

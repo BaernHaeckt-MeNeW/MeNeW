@@ -22,7 +22,7 @@ public class MealRestController {
     @GetMapping
     public List<MealDTO> listMeals(
             @RequestParam(required = false)
-            @org.springframework.format.annotation.DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate date
     ) {
         return mealService.list(date);
