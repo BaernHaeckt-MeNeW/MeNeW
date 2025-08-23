@@ -7,6 +7,8 @@ import ch.bernhackt.menew.backend.respository.MealRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,10 +21,13 @@ public class MealService {
         this.mealRepository = mealRepository;
     }
 
-    public List<MealDTO> listAll() {
-        return mealRepository.findAll().stream()
-                .map(MealDTO::fromEntity)
-                .toList();
+    public List<MealDTO> list(LocalDate date) {
+        if (date == null) {
+            return mealRepository.findAll().stream()
+                    .map(MealDTO::fromEntity)
+                    .toList();
+        }
+        return mealRepository.findByPlannedMealDate(date).stream().map(MealDTO::fromEntity).toList();
     }
 
     public void delete(Long id) {
@@ -34,6 +39,14 @@ public class MealService {
         }
     }
 
+    public List<MealDTO> listByDate(LocalDate date) {
+        List<Meal> meals = mealRepository.findByPlannedMealDate(date);
+        List<MealDTO> mealDTOS = new ArrayList<>();
+        for (Meal meal : meals) {
+            mealDTOS.add(MealDTO.fromEntity(meal));
+        }
+        return mealDTOS;
+    }
 
     public MealDTO create(MealDTO dto) {
         if (dto.id() != null && mealRepository.findById(dto.id()).isPresent()) {
