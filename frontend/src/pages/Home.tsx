@@ -90,7 +90,7 @@ export default function Home() {
                     ))}
                 </> :
                 <>
-                    <NoMealCard text={"Für das Frühstück hast Du noch nichts geplant."}>
+                    <NoMealCard text={"Für das Frühstück hast Du noch nichts geplant."} date={selectedDate} mealType={"BREAKFAST"}>
                     </NoMealCard>
 
                 </>}
@@ -99,7 +99,7 @@ export default function Home() {
                         <MealCard key={index} name={meal.name} mealTime={"Mittagessen"}/>
                     ))}
                 </> :
-                <NoMealCard text={"Für das Mittagessen hast Du noch nichts geplant."}>
+                <NoMealCard text={"Für das Mittagessen hast Du noch nichts geplant."} date={selectedDate} mealType={"LUNCH"}>
                 </NoMealCard>}
             {hasDinner ? <>
                     {selectedDatesMeals.filter(m => m.mealTime === 'DINNER')?.map((meal, index) => (
@@ -107,7 +107,7 @@ export default function Home() {
                     ))}
                 </> :
                 <>
-                    <NoMealCard text={"Für das Abendessen hast Du noch nichts geplant."}>
+                    <NoMealCard text={"Für das Abendessen hast Du noch nichts geplant."} date={selectedDate} mealType={"DINNER"}>
                     </NoMealCard>
 
                 </>}

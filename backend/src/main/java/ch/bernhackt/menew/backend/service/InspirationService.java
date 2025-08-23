@@ -2,6 +2,7 @@ package ch.bernhackt.menew.backend.service;
 
 import ch.bernhackt.menew.backend.dto.InspirationDTO;
 import ch.bernhackt.menew.backend.dto.QuestionAndAnswerDTO;
+import ch.bernhackt.menew.backend.entity.MealTime;
 import ch.bernhackt.menew.backend.entity.Tag;
 import ch.bernhackt.menew.backend.entity.TagCategory;
 import ch.bernhackt.menew.backend.respository.PersonRepository;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import static java.util.stream.Collectors.toList;
@@ -27,7 +29,7 @@ public class InspirationService {
         this.personRepository = personRepository;
     }
 
-    public InspirationDTO getInspiration(QuestionAndAnswerDTO[] questionAndAnswerDTOS) {
+    public InspirationDTO getInspiration(QuestionAndAnswerDTO[] questionAndAnswerDTOS, MealTime mealTime, LocalDate date) {
         var persons = personRepository.findAll();
         var personsDiets = persons.stream()
                 .flatMap(person -> person.getDiets().stream())
@@ -61,6 +63,8 @@ public class InspirationService {
 
         var prompt = """
                 Informationen über die Personen:
+                Mahlzeit: %s
+                
                 Diäten:
                 %s
                 
@@ -75,6 +79,7 @@ public class InspirationService {
                 %s
                 
                 """.formatted(
+                mealTime,
                 personsDiets.stream().map(diet -> "- " + diet.getName()).toList().toString(),
                 noGoTags.stream().map(tag -> "- " + tag).toList().toString(),
                 goTags.stream().map(tag -> "- " + tag).toList().toString(),

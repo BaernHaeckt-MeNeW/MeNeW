@@ -18,7 +18,10 @@ const router = createBrowserRouter([
             { index: true, element: <Home /> },
             { path: "household", element: <Household /> },
             { path: "new-person", element: <NewPerson/> },
-            { path: "dialog", element: <Dialog/> }
+            {
+                path: "dialog",
+                element: <Dialog/>
+            }
         ],
     },
 ]);

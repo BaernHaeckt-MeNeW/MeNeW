@@ -1,4 +1,12 @@
 package ch.bernhackt.menew.backend.dto;
 
-public record GetInspirationDTO(QuestionAndAnswerDTO[] questionsAndAnswers) {
+import ch.bernhackt.menew.backend.entity.MealTime;
+
+import java.time.LocalDate;
+
+public record GetInspirationDTO(
+        QuestionAndAnswerDTO[] questionsAndAnswers,
+        LocalDate date,
+        MealTime mealType
+) {
 }

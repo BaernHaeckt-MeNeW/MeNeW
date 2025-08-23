@@ -1,14 +1,17 @@
 import type { ReactNode } from "react";
 import {Link} from "react-router-dom";
+import type {MealType} from "../model/MealType.ts";
 
 interface NoMealCardProps {
+    date: Date;
+    mealType: MealType;
     text?: string;
     icon?: ReactNode;
     onClick?: () => void;
     interactive?: boolean;
 }
 
-export default function NoMealCard({ text, icon, onClick, interactive }: NoMealCardProps) {
+export default function NoMealCard({date, mealType, text, icon, onClick, interactive }: NoMealCardProps) {
     return (
         <div
             onClick={interactive ? onClick : undefined}
@@ -31,7 +34,7 @@ export default function NoMealCard({ text, icon, onClick, interactive }: NoMealC
                 <div className="relative rounded-2xl bg-white/10 backdrop-blur-md w-full">
                     <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 blur-md opacity-75"></div>
                     <div className="relative bg-white/5 rounded-2xl py-4 px-2">
-                        <Link to={"dialog"} className="text-white">✨ Finde eine Mahlzeit</Link>
+                        <Link to={`dialog?mealType=${mealType}&date=${date.toISOString().split('T')[0]}`} className="text-white">✨ Finde eine Mahlzeit</Link>
                     </div>
                 </div>
             </div>
