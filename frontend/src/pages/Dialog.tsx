@@ -4,10 +4,19 @@ import {QUESTIONS_TREE} from "../inspiration/data/questions.ts";
 import type {Answer, Question} from "../inspiration/model/dialog.ts";
 import {RefreshCcw} from "lucide-react";
 import {api} from "../lib/api.ts";
+import {useSearchParams} from "react-router-dom";
+import type {MealType} from "../model/MealType.ts";
 
 type InspirationItem = { title: string };
 
 export default function Dialog() {
+
+    const [searchParams] = useSearchParams();
+
+    const dateString = searchParams.get("date") || undefined;
+    const date = dateString ? new Date(dateString) : undefined;
+    const mealType = searchParams.get("mealType") as MealType || undefined;
+
     const [conversation, setConversation] = useState<Question[]>([QUESTIONS_TREE]);
     const [seen, setSeen] = useState<Set<string>>(new Set([QUESTIONS_TREE.text]));
     const [selected, setSelected] = useState<Record<string, string>>({});
@@ -63,7 +72,7 @@ export default function Dialog() {
             answer: string
         }[]): Promise<InspirationItem[]> => {
             setIsLoadingInspo(true);
-            const inspiration = await api.getInspiration(pairs);
+            const inspiration = await api.getInspiration(pairs, date || new Date(), mealType || "DINNER");
             return inspiration.ideas.map((inspiration: string) => ({title: inspiration}));
         };
 

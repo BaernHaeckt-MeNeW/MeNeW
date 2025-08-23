@@ -3,6 +3,7 @@ import type {Person} from "../model/Person.ts";
 import type {Diet} from "../model/Diet.ts";
 import type {Meal} from "../model/Meal.ts";
 import type {CreatePerson} from "../model/CreatePerson.ts";
+import type {MealType} from "../model/MealType.ts";
 
 export const api = {
     getPersons: () =>
@@ -17,10 +18,10 @@ export const api = {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(person),
         }),
-    getInspiration: (questionsAndAnswers: { question: string; answer: string }[]) =>
+    getInspiration: (questionsAndAnswers: { question: string; answer: string }[], date: Date, mealType: MealType) =>
         request<{ideas: string[]}>(`/api/inspiration`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({questionsAndAnswers: questionsAndAnswers}),
+            body: JSON.stringify({questionsAndAnswers: questionsAndAnswers, date: date.toISOString().split('T')[0], mealType}),
         }),
 };
