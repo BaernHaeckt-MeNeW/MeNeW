@@ -21,13 +21,11 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final DietRepository dietRepository;
     private final TagRepository tagRepository;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public PersonService(PersonRepository personRepository, DietRepository dietRepository, TagRepository tagRepository, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public PersonService(PersonRepository personRepository, DietRepository dietRepository, TagRepository tagRepository) {
         this.personRepository = personRepository;
         this.dietRepository = dietRepository;
         this.tagRepository = tagRepository;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public List<PersonDTO> listAll() {
@@ -44,7 +42,6 @@ public class PersonService {
             throw new RuntimeException("Person with id " + id + "doesn't exist");
         }
     }
-
 
     public PersonDTO create(PersonDTO dto) {
         if (dto.id() != null && personRepository.findById(dto.id()).isPresent()) {
