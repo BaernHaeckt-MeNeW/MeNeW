@@ -3,6 +3,7 @@ import Nav from "../components/Nav.tsx";
 import {QUESTIONS_TREE} from "../inspiration/data/questions.ts";
 import type {Answer, Question} from "../inspiration/model/dialog.ts";
 import {RefreshCcw} from "lucide-react";
+import {api} from "../lib/api.ts";
 
 type InspirationItem = { title: string };
 
@@ -23,13 +24,13 @@ export default function Dialog() {
         setIsLeaf(false);
         setIsLoadingInspo(false);
         setInspoShown(false);
-        if (scrollRef.current) scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
+        if (scrollRef.current) scrollRef.current.scrollTo({top: 0, behavior: "auto"});
     }, []);
 
     const onClickAnswer = useCallback((q: Question, a: Answer) => {
         if (selected[q.text]) return;
         const next = a.followUp as Question | undefined;
-        setSelected(prev => ({ ...prev, [q.text]: a.text }));
+        setSelected(prev => ({...prev, [q.text]: a.text}));
 
         if (!next || !next.answers?.length) {
             setIsLeaf(true);
@@ -43,13 +44,13 @@ export default function Dialog() {
     }, [seen, selected]);
 
     const summary = useMemo(
-        () => conversation.filter(q => selected[q.text]).map(q => ({ question: q.text, answer: selected[q.text] })),
+        () => conversation.filter(q => selected[q.text]).map(q => ({question: q.text, answer: selected[q.text]})),
         [conversation, selected]
     );
 
     useEffect(() => {
         if (scrollRef.current) {
-            scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+            scrollRef.current.scrollTo({top: scrollRef.current.scrollHeight, behavior: "smooth"});
         }
     }, [conversation, isLeaf, isLoadingInspo]);
 
@@ -57,32 +58,20 @@ export default function Dialog() {
     useEffect(() => {
         if (!isLeaf || inspoShown || isLoadingInspo) return;
 
-        const fetchInspirationMock = async (pairs: {question: string; answer: string}[]): Promise<InspirationItem[]> => {
+        const fetchInspirationMock = async (pairs: {
+            question: string;
+            answer: string
+        }[]): Promise<InspirationItem[]> => {
             setIsLoadingInspo(true);
-
-            // --- REAL CALL GOES HERE ---
-            // const res = await fetch("/api/inspiration", {
-            //   method: "POST",
-            //   headers: { "Content-Type": "application/json" },
-            //   body: JSON.stringify({ selections: pairs })
-            // });
-            // const data: { items: InspirationItem[] } = await res.json();
-            // return data.items;
-
-            // Mocked response (simulate latency)
-            await new Promise(r => setTimeout(r, 900));
-            return [
-                { title: "Shakshuka mit Feta & Kräutern" },
-                { title: "Veganes Linsen-Dal mit Spinat" },
-                { title: "Glutenfreie Buddha-Bowl mit Tofu" },
-                { title: "Mediterrane Pasta mit Gemüse" },
-                { title: "Overnight Oats mit Beeren & Nüssen" },
-            ];
+            const inspiration = await api.getInspiration(pairs);
+            return inspiration.ideas.map((inspiration: string) => ({title: inspiration}));
         };
 
         const go = async () => {
             const pairs = summary; // the Q/A pairs you collected
             const items = await fetchInspirationMock(pairs);
+
+            console.log("Fetched inspiration items:", items);
 
             const inspirationQuestion: Question = {
                 text: "🍽️ Inspirationen für Dich",
@@ -114,7 +103,7 @@ export default function Dialog() {
                             aria-label="Start over"
                             title="Start over"
                         >
-                            <RefreshCcw className="w-5 h-5" />
+                            <RefreshCcw className="w-5 h-5"/>
                         </button>
                     }
                 />
@@ -132,7 +121,8 @@ export default function Dialog() {
                             </div>
 
                             <div className="flex justify-end">
-                                <div className="bg-gray-800 w-4/5 text-white p-4 rounded-2xl shadow-md my-4 flex flex-col gap-3">
+                                <div
+                                    className="bg-gray-800 w-4/5 text-white p-4 rounded-2xl shadow-md my-4 flex flex-col gap-3">
                                     {message.answers.map((a, j) => {
                                         const isSelectedAns = selected[message.text] === a.text;
                                         const locked = !!selected[message.text];
@@ -149,7 +139,8 @@ export default function Dialog() {
                           ${locked && !isSelectedAns ? "opacity-60 cursor-not-allowed" : ""}`}
                                             >
                                                 {a.text}
-                                                {isSelectedAns && <span className="ml-2 inline-block text-sm font-semibold animate-pulse">✓</span>}
+                                                {isSelectedAns && <span
+                                                    className="ml-2 inline-block text-sm font-semibold animate-pulse">✓</span>}
                                             </button>
                                         );
                                     })}
@@ -161,8 +152,10 @@ export default function Dialog() {
                     {(isLeaf && !inspoShown) && (
                         <div className="w-full flex justify-center mt-2">
               <span className="relative inline-flex">
-                <span className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg"></span>
-                <span className="absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 animate-ping"></span>
+                <span
+                    className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg"></span>
+                <span
+                    className="absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-75 animate-ping"></span>
               </span>
                         </div>
                     )}

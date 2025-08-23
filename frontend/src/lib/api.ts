@@ -17,4 +17,10 @@ export const api = {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(person),
         }),
+    getInspiration: (questionsAndAnswers: { question: string; answer: string }[]) =>
+        request<{ideas: string[]}>(`/api/inspiration`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({questionsAndAnswers: questionsAndAnswers}),
+        }),
 };
