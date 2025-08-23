@@ -2,6 +2,7 @@ package ch.bernhackt.menew.backend.service;
 
 import ch.bernhackt.menew.backend.dto.InspirationDTO;
 import ch.bernhackt.menew.backend.dto.QuestionAndAnswerDTO;
+import ch.bernhackt.menew.backend.entity.Diet;
 import ch.bernhackt.menew.backend.entity.MealTime;
 import ch.bernhackt.menew.backend.entity.Tag;
 import ch.bernhackt.menew.backend.entity.TagCategory;
@@ -85,9 +86,9 @@ public class InspirationService {
                 
                 """.formatted(
                 mealTime,
-                personsDiets.stream().map(diet -> "- " + diet.getName()).toList().toString(),
-                noGoTags.stream().map(tag -> "- " + tag).toList().toString(),
-                goTags.stream().map(tag -> "- " + tag).toList().toString(),
+                personsDiets.stream().map(Diet::getName).toList().toString(),
+                noGoTags.stream().toList().toString(),
+                goTags.stream().toList().toString(),
                 lastInspiration == null || lastInspiration.isEmpty() ? "Keine" : lastInspiration.stream().map(tag -> "- " + tag).toList().toString(),
                 parsedString
         );

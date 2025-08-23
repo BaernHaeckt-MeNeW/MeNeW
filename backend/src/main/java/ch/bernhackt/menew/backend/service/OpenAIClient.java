@@ -26,6 +26,9 @@ public class OpenAIClient {
             Das erste Zeichen der Antwort muss eine eckige Klammer sein ([).
             Das letzte Zeichen der Antwort muss eine eckige Klammer sein (]).
             
+            *Sehr wichtig:*
+            Wenn die Prompt Gedanken enthält, müssen diese berücksichtigt werden, auch wenn sie den anderen Informationen widersprechen.
+            
             """;
 
     private final RestTemplate restTemplate;

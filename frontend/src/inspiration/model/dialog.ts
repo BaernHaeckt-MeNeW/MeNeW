@@ -1,6 +1,7 @@
 export interface Question {
     text: string,
-    answers: Answer[]
+    answers: Answer[],
+    userEcho?: boolean
 }
 
 export interface Answer {

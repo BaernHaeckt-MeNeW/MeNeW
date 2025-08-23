@@ -97,7 +97,7 @@ export default function Dialog() {
         setSelected(prev => ({...prev, [q.text]: a.text}));
 
         if (a.manual) {
-            const prompt: Question = {text: "✍️ Bitte gib den Namen des Gerichts ein", answers: []};
+            const prompt: Question = {text: "✍️ Was geht dir durch den Kopf?", answers: []};
             setConversation(prev => [...prev, prompt]);
             setSeen(prev => new Set(prev).add(prompt.text));
             setIsManualEntry(true);
@@ -159,7 +159,7 @@ export default function Dialog() {
             };
             setConversation(prev => [...prev, inspirationQuestion]);
             setSeen(prev => new Set(prev).add(inspirationQuestion.text));
-            setInspirationHistory(prev => [...prev, ...ideas]);   // hier sammeln
+            setInspirationHistory(prev => [...prev, ...ideas]);
             setIsLoadingInspo(false);
             setInspoShown(true);
             setIsLeaf(false);
@@ -173,13 +173,54 @@ export default function Dialog() {
     const submitManual = useCallback(() => {
         const value = manualValue.trim();
         if (!value) return;
-        const confirmation: Question = {text: `📝 Erfasst: ${value}`, answers: []};
+
+        const confirmation: Question = {
+            text: `📝 ${value}`,
+            answers: [],
+            userEcho: true
+        };
         setConversation(prev => [...prev, confirmation]);
         setSeen(prev => new Set(prev).add(confirmation.text));
-        setIsProcessingChoice(true);
-        void api.createMeal({name: value, mealTime: mealType, plannedMealDate: date ?? new Date()});
-        setTimeout(() => navigate("/"), 1200);
-    }, [manualValue, mealType, date, navigate]);
+
+        setSelected(prev => ({ ...prev, ["Gedanken"]: value }));
+
+        setIsManualEntry(false);
+        setIsProcessingChoice(false);
+
+        (async () => {
+            setIsLoadingInspo(true);
+
+            const pairsFromState = conversation
+                .filter(msg => selected[msg.text])
+                .map(msg => ({ question: msg.text, answer: selected[msg.text] }));
+
+            const hasGedanken = pairsFromState.some(p => p.question === "Gedanken");
+            const pairs = hasGedanken
+                ? pairsFromState
+                : [...pairsFromState, { question: "Gedanken", answer: value }];
+
+            const inspiration = await api.getInspiration(
+                pairs,
+                date || new Date(),
+                mealType || "DINNER",
+                inspirationHistory
+            );
+
+            const ideas = inspiration.ideas.slice(0, 3);
+            const newInspo: Question = {
+                text: INSPIRATION_TITLE,
+                answers: [...ideas.map<Answer>(t => ({ text: t })), { text: "✨ Was Neues" }],
+            };
+
+            setConversation(prev => [...prev, newInspo]);
+            setSeen(prev => new Set(prev).add(newInspo.text));
+            setInspirationHistory(prev => [...prev, ...ideas]);
+            setIsLoadingInspo(false);
+            setIsLeaf(false);
+            setInspoShown(true);
+        })();
+    }, [manualValue, mealType, date, conversation, selected, inspirationHistory]);
+
 
     return (
         <div className="h-screen overflow-hidden">
@@ -207,9 +248,17 @@ export default function Dialog() {
                 >
                     {conversation.map((message, i) => (
                         <div key={`msg-${i}`} className="w-full">
-                            <div className="bg-blue-700 text-white p-4 rounded-2xl shadow-md my-4 w-fit max-w-2xl">
-                                {message.text}
-                            </div>
+                            {!message.userEcho ? (
+                                <div className="bg-blue-700 text-white p-4 rounded-2xl shadow-md my-4 w-fit max-w-2xl">
+                                    {message.text}
+                                </div>
+                            ) : (
+                                <div className="flex justify-end">
+                                    <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white p-4 rounded-2xl shadow-md my-4 w-fit max-w-2xl">
+                                        {message.text}
+                                    </div>
+                                </div>
+                            )}
 
                             {message.answers.length > 0 && (
                                 <div className="flex justify-end">
@@ -276,7 +325,7 @@ export default function Dialog() {
                                 ref={manualInputRef}
                                 value={manualValue}
                                 onChange={(e) => setManualValue(e.target.value)}
-                                placeholder="Gericht manuell eingeben…"
+                                placeholder="Gedanken"
                                 className="flex-1 bg-transparent outline-none text-sm text-gray-900 placeholder:text-gray-400"
                                 disabled={isProcessingChoice}
                             />
