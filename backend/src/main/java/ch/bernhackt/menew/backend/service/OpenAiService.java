@@ -14,20 +14,25 @@ public class OpenAiService {
             You are an app that suggests menus based on information such as diets about person.
             - Answer with suggestions for a meal, based on the input you receive.
             """;
-
     private final OpenAIClient client = OpenAIOkHttpClient.fromEnv();
 
     public String prompt(String userPrompt) {
-        ResponseCreateParams params = ResponseCreateParams.builder()
-                .model(ChatModel.GPT_5_CHAT_LATEST)
-                .instructions(SYSTEM_PROMPT)
-                .input(userPrompt)
-                .build();
+        try {
+            ResponseCreateParams params = ResponseCreateParams.builder()
+                    .model(ChatModel.GPT_5_CHAT_LATEST)
+                    .instructions(SYSTEM_PROMPT)
+                    .input(userPrompt)
+                    .build();
 
-        Response response = client.responses().create(params);
+            Response response = client.responses().create(params);
 
-        // TODO: Handle response
-        return "";
+            // TODO: Handle response
+            return "";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
 
