@@ -27,7 +27,12 @@ export default function NoMealCard({ text, icon, onClick, interactive }: NoMealC
 
             {icon && <div className="flex justify-center">{icon}</div>}
             <div className={"flex gap-2 justify-center mt-2"}>
-                <div className={"border-dotted border-gray-600 border-2 rounded-2xl py-4 px-2"}>Inspiriere mich...</div>
+                <div className="relative rounded-2xl bg-white/10 backdrop-blur-md">
+                    <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 blur-md opacity-75"></div>
+                    <div className="relative bg-white/5 rounded-2xl py-4 px-2">
+                        <p className="text-white">✨ Inspiriere mich</p>
+                    </div>
+                </div>
                 <div className={"border-dotted border-gray-600 border-2 rounded-2xl py-4 px-2"}>Mahlzeit festlegen</div>
             </div>
         </div>
