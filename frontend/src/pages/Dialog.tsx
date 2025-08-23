@@ -92,7 +92,7 @@ export default function Dialog() {
             answer: string
         }[]): Promise<InspirationItem[]> => {
             setIsLoadingInspo(true);
-            const inspiration = await api.getInspiration(pairs, date || new Date(), mealType || "DINNER", "");
+            const inspiration = await api.getInspiration(pairs, date || new Date(), mealType || "DINNER", [""]);
             return inspiration.ideas.map((inspiration: string) => ({title: inspiration}));
         };
 
