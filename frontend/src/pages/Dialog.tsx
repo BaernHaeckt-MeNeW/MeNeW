@@ -47,12 +47,12 @@ export default function Dialog() {
     }, []);
 
     const onClickAnswer = useCallback((q: Question, a: Answer) => {
-        if (q.text === INSPIRATION_TITLE && a.text === "✨ Was Neues") {
+        if (q.text === INSPIRATION_TITLE && a.text === "✨ Etwas Neues") {
             if (isLoadingInspo) return;
 
             setSelected(prev => ({ ...prev, [q.text]: a.text }));
 
-            const userEcho: Question = { text: "✨ Was Neues", answers: [] };
+            const userEcho: Question = { text: "✨ Etwas Neues", answers: [] };
             setConversation(prev => [...prev, userEcho]);
             setSeen(prev => new Set(prev).add(userEcho.text));
 
@@ -75,7 +75,7 @@ export default function Dialog() {
 
                 const newInspo: Question = {
                     text: INSPIRATION_TITLE,
-                    answers: [...newAnswers, { text: "✨ Was Neues" }],
+                    answers: [...newAnswers, { text: "✨ Etwas Neues" }],
                 };
 
                 setConversation(prev => [...prev, newInspo]);
@@ -155,7 +155,7 @@ export default function Dialog() {
             const ideas = items.map(it => it.title);
             const inspirationQuestion: Question = {
                 text: INSPIRATION_TITLE,
-                answers: [...ideas.map<Answer>(t => ({text: t})), {text: "✨ Was Neues"}],
+                answers: [...ideas.map<Answer>(t => ({text: t})), {text: "✨ Etwas Neues"}],
             };
             setConversation(prev => [...prev, inspirationQuestion]);
             setSeen(prev => new Set(prev).add(inspirationQuestion.text));
@@ -209,7 +209,7 @@ export default function Dialog() {
             const ideas = inspiration.ideas.slice(0, 3);
             const newInspo: Question = {
                 text: INSPIRATION_TITLE,
-                answers: [...ideas.map<Answer>(t => ({ text: t })), { text: "✨ Was Neues" }],
+                answers: [...ideas.map<Answer>(t => ({ text: t })), { text: "✨ Etwas Neues" }],
             };
 
             setConversation(prev => [...prev, newInspo]);

@@ -29,10 +29,8 @@ public class BackendApplication {
     CommandLineRunner initData(PersonRepository repo, MealRepository mealRepository, DietRepository dietRepository, TagRepository tagRepository) {
         return args -> {
             Diet veg = new Diet("Vegetarisch");
-            Diet halal = new Diet("Halal");
             Tag tag1 = new Tag(TagCategory.NOGO, "Mag keinen Fisch", LocalDateTime.now());
             Tag tag2 = new Tag(TagCategory.NOGO, "Zu viel Fleisch", LocalDateTime.now());
-            dietRepository.saveAll(List.of(veg, halal));
             tagRepository.saveAll(List.of(tag1, tag2));
 
             Random random = new Random();
