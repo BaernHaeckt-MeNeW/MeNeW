@@ -31,8 +31,7 @@ public class BackendApplication {
                     new Person("Charlie", Collections.emptySet(), Collections.emptySet())
             ));
             mealRepository.saveAll(List.of(
-                    new Meal("Porridge", MealTime.DINNER, LocalDate.now()),
-                    new Meal("Pizza", MealTime.BREAKFAST, LocalDate.now()),
+                    new Meal("Porridge", MealTime.BREAKFAST, LocalDate.now()),
                     new Meal("Pad Thai", MealTime.DINNER, LocalDate.now())
             ));
         };
