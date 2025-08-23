@@ -7,6 +7,7 @@ import NoMealCard from "../components/NoMealCard.tsx";
 import {Link, useNavigate} from "react-router-dom";
 import {ChevronLeft, ChevronRight, Users} from "lucide-react";
 import {MealInsightTable} from "../components/MealInsightTable.tsx";
+import {DatePickerPopUp} from "../components/DatePickerPopUp.tsx";
 
 const WEEK_DAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const TODAY = new Date();
@@ -17,6 +18,7 @@ export default function Home() {
         "hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] " +
         "active:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]";
 
+    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [meals, setMeals] = useState<Meal[] | null>(null);
     const navigate = useNavigate();
@@ -38,11 +40,11 @@ export default function Home() {
         return <div></div>;
     }
 
-    const todaysMeals = meals.filter(m => m.plannedMealDate === new Date().toISOString().split('T')[0]);
+    const selectedDatesMeals = meals.filter(m => m.plannedMealDate === selectedDate.toISOString().split('T')[0]);
 
-    const hasBreakfast = todaysMeals.some(m => m.mealTime === 'BREAKFAST');
-    const hasLunch = todaysMeals.some(m => m.mealTime === 'LUNCH');
-    const hasDinner = todaysMeals.some(m => m.mealTime === 'DINNER');
+    const hasBreakfast = selectedDatesMeals.some(m => m.mealTime === 'BREAKFAST');
+    const hasLunch = selectedDatesMeals.some(m => m.mealTime === 'LUNCH');
+    const hasDinner = selectedDatesMeals.some(m => m.mealTime === 'DINNER');
 
     return <>
         <Nav
@@ -54,7 +56,8 @@ export default function Home() {
                     <Users/>
                 </Link>
             }/>
-        <div className={"mt-2 mb-10"}>
+        <DatePickerPopUp isOpen={isDatePickerOpen} onClose={() => setIsDatePickerOpen(false)}/>
+        <div className={"mt-2 mb-10"} onClick={() => setIsDatePickerOpen(true)}>
             <MealInsightTable meals={meals}/>
         </div>
         <div className={"w-full flex items-center justify-center gap-8 mb-10 mx-auto"}>
@@ -82,7 +85,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 gap-4 justify-center">
             {hasBreakfast ? <>
-                    {todaysMeals.filter(m => m.mealTime === 'BREAKFAST')?.map((meal, index) => (
+                    {selectedDatesMeals.filter(m => m.mealTime === 'BREAKFAST')?.map((meal, index) => (
                         <MealCard key={index} name={meal.name} mealTime={"Frühstück"}/>
                     ))}
                 </> :
@@ -92,14 +95,14 @@ export default function Home() {
 
                 </>}
             {hasLunch ? <>
-                    {todaysMeals.filter(m => m.mealTime === 'LUNCH')?.map((meal, index) => (
+                    {selectedDatesMeals.filter(m => m.mealTime === 'LUNCH')?.map((meal, index) => (
                         <MealCard key={index} name={meal.name} mealTime={"Mittagessen"}/>
                     ))}
                 </> :
                 <NoMealCard text={"Für das Mittagessen hast Du noch nichts geplant."}>
                 </NoMealCard>}
             {hasDinner ? <>
-                    {todaysMeals.filter(m => m.mealTime === 'DINNER')?.map((meal, index) => (
+                    {selectedDatesMeals.filter(m => m.mealTime === 'DINNER')?.map((meal, index) => (
                         <MealCard key={index} name={meal.name} mealTime={"Abendessen"}/>
                     ))}
                 </> :
