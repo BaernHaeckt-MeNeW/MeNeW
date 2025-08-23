@@ -2,82 +2,87 @@ import type {Question} from "../model/dialog.ts";
 
 
 export const QUESTIONS_TREE: Question = {
-    text: "Was möchten Sie tun?",
+    text: "Wie bist du drauf?",
     answers: [
         {
-            text: "Essen planen",
+            text: "Heute was besonderes",
             followUp: {
-                text: "Für wen möchten Sie das Essen planen?",
+                text: "Was spricht dich gerade an?",
                 answers: [
-                    {
-                        text: "Für mich",
-                        followUp: {
-                            text: "Welche Art von Mahlzeit möchten Sie planen?",
-                            answers: [
-                                {text: "Frühstück"},
-                                {text: "Mittagessen"},
-                                {text: "Abendessen"},
-                                {text: "Snack"},
-                            ]
-                        }
-                    },
-                    {
-                        text: "Für jemand anderen",
-                        followUp: {
-                            text: "Welche Art von Mahlzeit möchten Sie planen?",
-                            answers: [
-                                {text: "Frühstück"},
-                                {text: "Mittagessen"},
-                                {text: "Abendessen"},
-                                {text: "Snack"},
-                            ]
-                        }
-                    },
-                    {
-                        text: "Für eine Gruppe",
-                        followUp: {
-                            text: "Wie viele Personen sind in der Gruppe?",
-                            answers: [
-                                {text: "2-4 Personen"},
-                                {text: "5-10 Personen"},
-                                {text: "Mehr als 10 Personen"},
-                            ]
-                        }
-                    },
+                    {text: "Knusprig"},
+                    {text: "Saftig"},
+                    {text: "Gehobenes Feeling"},
+                    {text: "Kreativ"}
                 ]
             }
         },
         {
-            text: "Einkaufsliste erstellen",
+            text: "Ich habe null Plan",
             followUp: {
-                text: "Möchten Sie eine neue Einkaufsliste erstellen oder eine vorhandene bearbeiten?",
+                text: "Was spricht dich gerade an?",
                 answers: [
-                    {text: "Neue Einkaufsliste erstellen"},
-                    {text: "Vorhandene Einkaufsliste bearbeiten"},
+                    {
+                        text: "Knusprig",
+                        followUp: {
+                            text: "Soll's eine bestimmte Region sein?",
+                            answers: [
+                                {text: "Asiatisch"},
+                                {text: "Mediterran"},
+                                {text: "Orientalisch"},
+                                {text: "Amerikanisch"},
+                                {text: "Egal"}
+                            ]
+                        }
+                    },
+                    {
+                        text: "Saftig",
+                        followUp: {
+                            text: "Soll's eine bestimmte Region sein?",
+                            answers: [
+                                {text: "Asiatisch"},
+                                {text: "Mediterran"},
+                                {text: "Orientalisch"},
+                                {text: "Amerikanisch"},
+                                {text: "Egal"}
+                            ]
+                        }
+                    },
+
+                    {
+                        text: "Gehobenes Feeling",
+                        followUp: {
+                            text: "Soll's eine bestimmte Region sein?",
+                            answers: [
+                                {text: "Asiatisch"},
+                                {text: "Mediterran"},
+                                {text: "Orientalisch"},
+                                {text: "Amerikanisch"},
+                                {text: "Egal"}
+                            ]
+                        }
+                    },
+
+                    {
+                        text: "Kreativ",
+                        followUp: {
+                            text: "Soll's eine bestimmte Region sein?",
+                            answers: [
+                                {text: "Asiatisch"},
+                                {text: "Mediterran"},
+                                {text: "Orientalisch"},
+                                {text: "Amerikanisch"},
+                                {text: "Egal"}
+                            ]
+                        }
+                    }
                 ]
             }
         },
         {
-            text: "Rezepte suchen",
-            followUp: {
-                text: "Nach welchen Kriterien möchten Sie Rezepte suchen?",
-                answers: [
-                    {text: "Nach Zutaten"},
-                    {text: "Nach Mahlzeittyp (z.B. Frühstück, Mittagessen)"},
-                    {text: "Nach Diätpräferenzen (z.B. vegetarisch, vegan)"},
-                ]
-            }
+            text: "Hauptsache schnell & easy"
         },
         {
-            text: "Einstellungen anpassen",
-            followUp: {
-                text: "Nach welchen Kriterien möchten Sie Rezepte suchen?",
-                answers: [
-                    {text: "Nach Zutaten"},
-                    {text: "Nach Mahlzeittyp (z.B. Frühstück, Mittagessen)"},
-                    {text: "Nach Diätpräferenzen (z.B. vegetarisch, vegan)"},
-                ]
-            }
-        },
+            text: "Ich hab was bestimmtes vor"
+        }
     ]
 }
