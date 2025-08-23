@@ -1,5 +1,6 @@
 package ch.bernhackt.menew.backend.controller;
 
+import ch.bernhackt.menew.backend.dto.CreatePersonDTO;
 import ch.bernhackt.menew.backend.dto.PersonDTO;
 import ch.bernhackt.menew.backend.service.PersonService;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class PersonRestController {
     }
 
     @PostMapping
-    public PersonDTO createPerson(@RequestBody PersonDTO person) {
+    public PersonDTO createPerson(@RequestBody CreatePersonDTO person) {
         return personService.create(person);
     }
 }

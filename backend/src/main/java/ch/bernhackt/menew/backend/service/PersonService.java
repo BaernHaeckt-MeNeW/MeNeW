@@ -1,6 +1,7 @@
 package ch.bernhackt.menew.backend.service;
 
 
+import ch.bernhackt.menew.backend.dto.CreatePersonDTO;
 import ch.bernhackt.menew.backend.dto.PersonDTO;
 import ch.bernhackt.menew.backend.entity.Diet;
 import ch.bernhackt.menew.backend.entity.Person;
@@ -43,75 +44,57 @@ public class PersonService {
         }
     }
 
-    public PersonDTO create(PersonDTO dto) {
-        if (dto.id() != null && personRepository.findById(dto.id()).isPresent()) {
-            throw new IllegalStateException("Person with id " + dto.id() + " already exists");
+    public PersonDTO create(CreatePersonDTO dto) {
+        Person person = new Person();
+        person.setName(dto.name());
+
+        Set<Diet> diets = resolveDiets(dto.diets());
+        person.setDiets(diets);
+
+        Set<Tag> tags = new HashSet<>();
+        tags.addAll(createAndSaveTags(dto.gos(), TagCategory.GO));
+        tags.addAll(createAndSaveTags(dto.noGos(), TagCategory.NOGO));
+        person.setTags(tags);
+
+        Person saved = personRepository.save(person);
+        return PersonDTO.fromEntity(saved);
+    }
+
+    private Set<Diet> resolveDiets(Long[] dietIds) {
+        if (dietIds == null || dietIds.length == 0) return Collections.emptySet();
+
+        Set<Long> ids = Arrays.stream(dietIds).filter(Objects::nonNull).collect(Collectors.toSet());
+        if (ids.isEmpty()) return Collections.emptySet();
+
+        List<Diet> found = dietRepository.findAllById(ids);
+        if (found.size() != ids.size()) {
+            Set<Long> foundIds = found.stream().map(Diet::getId).collect(Collectors.toSet());
+            Set<Long> missing = new HashSet<>(ids);
+            missing.removeAll(foundIds);
+            throw new RuntimeException("Diet no found: " + missing);
         }
+        return new HashSet<>(found);
+    }
 
-        Person personCreated = new Person();
-        personCreated.setName(dto.name());
+    private Set<Tag> createAndSaveTags(String[] names, TagCategory category) {
+        if (names == null || names.length == 0) return Collections.emptySet();
 
-        /*
-         * === Diets ===
-         * Resolve diets from the DTO:
-         * - if an ID is present, fetch the diet entry
-         * - if only name is present, lookup or create new diet if not found by name
-         */
-
-        Set<Diet> diets = dto.diets() == null ? Set.of() : dto.diets().stream()
-                .map(d -> {
-                    if (d.id() != null) {
-                        return dietRepository.findById(d.id())
-                                .orElseThrow(() -> new IllegalArgumentException("Diet with id " + d.id() + " doesn't exist"));
-                    }
-                    String name = d.name();
-                    return dietRepository.findByName(name)
-                            .orElseGet(() -> dietRepository.save(new Diet(name)));
+        List<Tag> toSave = Arrays.stream(names)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .distinct()
+                .map(n -> {
+                    Tag t = new Tag();
+                    t.setName(n);
+                    t.setCategory(category);
+                    return t;
                 })
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .toList();
 
-        personCreated.setDiets(diets);
+        if (toSave.isEmpty()) return Collections.emptySet();
 
-        /*
-         * === Tags ===
-         * Resolve tags from the DTO:
-         * - if an ID is present, fetch the existing Tag entity
-         * - if name + category are provided, lookup or create a new Tag if not found
-         */
-        Set<Tag> tags = dto.tags() == null ? Set.of() :
-                dto.tags().stream()
-                        .map(t -> {
-                            if (t.id() != null) {
-                                return tagRepository.findById(t.id())
-                                        .orElseThrow(() -> new IllegalArgumentException("Tag with id " + t.id() + " doesn't exist"));
-                            }
-                            String name = t.name();
-                            if (name == null || name.isBlank()) {
-                                throw new IllegalArgumentException("Tag must not be blank");
-                            }
-                            TagCategory category;
-                            try {
-                                category = t.categoryName() == null ? null : TagCategory.valueOf(t.categoryName());
-                            } catch (IllegalArgumentException e) {
-                                throw new IllegalArgumentException("Tag category '" + t.categoryName() + "' is invalid");
-                            }
-                            if (category == null) {
-                                throw new IllegalArgumentException("Tag category is required");
-                            }
-                            return tagRepository.findByNameAndCategory(name, category)
-                                    .orElseGet(() -> {
-                                        Tag newTag = new Tag();
-                                        newTag.setName(name);
-                                        newTag.setCategory(category);
-                                        return tagRepository.save(newTag);
-                                    });
-                        })
-                        .collect(Collectors.toCollection(LinkedHashSet::new));
-
-        personCreated.setTags(tags);
-
-        Person personSaved = personRepository.save(personCreated);
-        return PersonDTO.fromEntity(personSaved);
+        return new HashSet<>(tagRepository.saveAll(toSave));
     }
 
 }
