@@ -19,6 +19,15 @@ public class Tag {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    public Tag() {
+    }
+
+    public Tag(TagCategory category, String name, LocalDateTime createdAt) {
+        this.category = category;
+        this.name = name;
+        this.createdAt = createdAt;
+    }
+
     public Long getId() {
         return id;
     }

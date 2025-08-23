@@ -1,18 +1,22 @@
 package ch.bernhackt.menew.backend;
 
-import ch.bernhackt.menew.backend.entity.Meal;
-import ch.bernhackt.menew.backend.entity.MealTime;
+import ch.bernhackt.menew.backend.entity.*;
+import ch.bernhackt.menew.backend.respository.DietRepository;
 import ch.bernhackt.menew.backend.respository.MealRepository;
 import ch.bernhackt.menew.backend.respository.PersonRepository;
+import ch.bernhackt.menew.backend.respository.TagRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
 
 @SpringBootApplication
 public class BackendApplication {
@@ -22,8 +26,17 @@ public class BackendApplication {
     }
 
     @Bean
-    CommandLineRunner initData(PersonRepository repo, MealRepository mealRepository) {
+    CommandLineRunner initData(PersonRepository repo, MealRepository mealRepository, DietRepository dietRepository, TagRepository tagRepository) {
         return args -> {
+            Diet veg = new Diet("Vegetarisch");
+            Diet halal = new Diet("Halal");
+            Tag tag1 = new Tag(TagCategory.NOGO, "Mag keinen Fisch", LocalDateTime.now());
+            Tag tag2 = new Tag(TagCategory.NOGO, "Zu viel Fleisch", LocalDateTime.now());
+            dietRepository.saveAll(List.of(veg, halal));
+            tagRepository.saveAll(List.of(tag1, tag2));
+            repo.save(new Person("Hans", Set.of(veg), Set.of(tag1)));
+            repo.save(new Person("Severin", Set.of(halal), Set.of(tag2)));
+
             Random random = new Random();
 
             LocalDate start = LocalDate.now().minusWeeks(1);
