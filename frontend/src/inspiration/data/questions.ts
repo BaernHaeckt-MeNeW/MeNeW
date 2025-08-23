@@ -8,7 +8,8 @@ export const QUESTIONS: Record<string, Question> = {
             {kind: "next", text: "Heute darf's was besonderes sein", nextId: "q2"},
             {kind: "next", text: "Ich habe null Plan", nextId: "q2"},
             {kind: "leaf", text: "Hauptsache schnell & easy", result: "VORSCHLÄGE"},
-            {kind: "leaf", text: "Ich hab was bestimmtes vor", result: "INPUT"}
+            {kind: "leaf", text: "Ich hab was bestimmtes vor", result: "INPUT"},
+            {kind: "leaf", text: "Ich möchte Zutaten aufbrauchen", result: "INPUT"}
         ],
     },
     q2: {
