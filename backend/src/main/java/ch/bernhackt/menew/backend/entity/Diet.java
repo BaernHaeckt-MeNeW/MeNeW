@@ -36,11 +36,4 @@ public class Diet {
         this.name = name;
     }
 
-    public String getLabel() {
-        return name;
-    }
-
-    public void setLabel(String label) {
-        this.name = label;
-    }
 }
