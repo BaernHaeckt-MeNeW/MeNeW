@@ -43,7 +43,7 @@ export function NewPerson() {
 
     return (
         <>
-            <Nav backButton />
+            <Nav backButton topCenterElement={<img src={"/assets/logo.svg"} alt="Logo" className="w-24 mx-auto"/>} topRightElement={<div className={"w-[40px]"}></div>}/>
             <form onSubmit={onSubmit}>
                 <section className="pt-2 pb-10">
                     <h1 className="text-3xl font-bold my-4">Neue Person</h1>

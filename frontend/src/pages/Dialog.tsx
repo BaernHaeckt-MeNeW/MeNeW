@@ -112,7 +112,7 @@ export default function Dialog() {
             setSeen(prev => new Set(prev).add(confirmation.text));
             setIsProcessingChoice(true);
             void api.createMeal({name: a.text, mealTime: mealType, plannedMealDate: date ?? new Date()});
-            setTimeout(() => navigate("/"), 1300);
+            setTimeout(() => navigate("/"), 3000);
             return;
         }
 
@@ -227,7 +227,8 @@ export default function Dialog() {
             <div className="fixed top-0 left-0 right-0 z-50 h-16 py-6 px-4 bg-background">
                 <Nav
                     backButton
-                    topCenterElement={<h1 className="font-bold text-2xl">MeNeW Assistant</h1>}
+                    topCenterElement={
+                        <img src={"/assets/logo.svg"} alt="Logo" className="w-24 mx-auto"/>}
                     topRightElement={
                         <button
                             onClick={resetDialog}
@@ -241,7 +242,7 @@ export default function Dialog() {
                 />
             </div>
 
-            <div className="pt-16 h-full">
+            <div className="pt-20 h-full">
                 <div
                     ref={scrollRef}
                     className="h-[calc(100vh-4rem)] overflow-y-auto flex flex-col gap-4 p-4 w-full pb-24"

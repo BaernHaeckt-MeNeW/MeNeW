@@ -49,7 +49,7 @@ export default function Home() {
     return <>
         <Nav
             topLeftElement={
-                <h1 className={"font-bold text-2xl"}>Hallo, Marco!</h1>
+                <img src={"/assets/logo.svg"} alt="Logo" className="w-24"/>
             }
             topRightElement={
                 <Link to={"/household"}>
