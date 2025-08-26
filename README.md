@@ -16,6 +16,7 @@ The whole application was developed in a weekend as part of the [BärnHäckt](ht
 </div>
 
 <div style="display: flex; gap: 10px;">
+    <img src="./docs/home.png" width="200" />
   <img src="./docs/dialog.png" width="200" />
 </div>
 </div>
