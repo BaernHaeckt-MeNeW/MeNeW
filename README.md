@@ -9,11 +9,16 @@ The whole application was developed in a weekend as part of the [BärnHäckt](ht
 
 [![Watch the video](docs/preview.png)](./Screencast.mp4)
 
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; gap: 10px;">
+  <img src="./docs/household.png" width="200" />
+  <img src="./docs/new_person.png" width="200" />
+</div>
 
-<img src="./docs/household.png" width="200" />
-<img src="./docs/new_person.png" width="200" />
-<img src="./docs/dialog.png" width="200" />
-
+<div style="display: flex; gap: 10px;">
+  <img src="./docs/dialog.png" width="200" />
+</div>
+</div>
 
 
 ## Configuration
